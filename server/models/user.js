@@ -22,9 +22,16 @@ const userSchema = new Schema(
       max: 32,
       required: true,
     },
+    securityQuestion: {
+      type: String,
+      required: true,
+    },
     security: {
       type: String,
       required: true,
+    },
+    verificationCode: {
+      type: String,
     },
     about: {},
     photo: String,

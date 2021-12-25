@@ -30,7 +30,6 @@ const UserProvider = ({ children }) => {
       return response;
     },
     function (error) {
-      // console.log(error);
       let res = error.response;
       if (res.status === 401 && res.config && !res.config.__isRetryRequest) {
         setState(null);

@@ -1,4 +1,5 @@
 import { LoadingOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
 
 const AuthForm = ({
   handleSubmit,
@@ -15,6 +16,13 @@ const AuthForm = ({
   loading,
   page,
 }) => {
+  const questionsArray = [
+    "Please select a security question.",
+    "What is your favorite color?",
+    "What is your favorite food?",
+    "What is the last name of your School's Principal?",
+  ];
+
   return (
     <form onSubmit={handleSubmit}>
       {page !== "login" && (
@@ -71,14 +79,15 @@ const AuthForm = ({
           </small>
           <select
             className="form-control"
+            defaultValue={0}
             onChange={(e) => {
-              console.log(e.target.value);
-              // setSecurityQuestion(e.target.value);    // e.target[0]
+              setSecurityQuestion(questionsArray[parseInt(e.target.value)]);
             }}
           >
-            <option value="color">What is your favorite color?</option>
-            <option value="food">What is your favorite food?</option>
-            <option value="principal">
+            <option value="0">Please select a security question.</option>
+            <option value="1">What is your favorite color?</option>
+            <option value="2">What is your favorite food?</option>
+            <option value="3">
               What is the last name of your School's Principal?
             </option>
           </select>
@@ -108,8 +117,8 @@ const AuthForm = ({
         <button
           disabled={
             page !== "login"
-              ? !name || !password || !email || !security
-              : !email || !password
+              ? !name || !password || !email || !security || loading
+              : !email || !password || loading
           }
           className="btn btn-primary col-md-12"
         >
