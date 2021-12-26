@@ -2,6 +2,9 @@ const User = require("../models/user");
 const { hashPassword, comparePassword } = require("../helpers/auth");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const secret = "KVKFKRCPNZQUYMLXOVYDSQKJKZDTSRLD";
+const { totp } = require("otplib");
+totp.options = { digits: 6, step: 300 };
 
 const register = async (req, res) => {
   const { name, email, password, securityQuestion, security } = req.body;
@@ -92,7 +95,7 @@ const login = async (req, res) => {
 
     //creating a jwt token for valid user and send it to client for easy and safe communication between client and server
     const jwtToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_CODE, {
-      expiresIn: "10s",
+      expiresIn: "5d",
     });
 
     user.password = undefined;
@@ -208,14 +211,14 @@ const sendEmail = async (req, res) => {
     },
   });
 
-  //generate a random number of 6 digits
-  const code = ("" + Math.random()).substring(2, 8);
+  //generate a random token of 6 digits
+  const code = totp.generate(secret);
 
   var mailOptions = {
     from: "agrawalladarshan@gmail.com",
-    to: "darshanagrawallaabc01@gmail.com",
-    subject: "Hello Darshan",
-    text: `How are you? => ${code}`,
+    to: `${email}`,
+    subject: `Hello ${user.name}!! Verification Code`,
+    text: `${code}`,
   };
 
   transporter.sendMail(mailOptions, async (error, info) => {
@@ -224,18 +227,8 @@ const sendEmail = async (req, res) => {
         error: "Something wrong happened.. try again!!",
       });
     } else {
-      const codeJwtToken = jwt.sign(
-        { verificationCode: code },
-        process.env.JWT_SECRET_CODE,
-        {
-          expiresIn: "1d",
-        }
-      );
-      await User.findByIdAndUpdate(user._id, {
-        verificationCode: codeJwtToken,
-      });
       return res.json({
-        ok: true,
+        code: code,
       });
     }
   });
@@ -251,7 +244,58 @@ const verifyCode = async (req, res) => {
     verificationCode,
   } = req.body;
 
-  console.log(`Verification code = ${verificationCode}`);
+  try {
+    const isValid = totp.check(verificationCode, secret);
+    if (!isValid) {
+      return res.json({
+        error: "Verification Failed..",
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!newPassword || newPassword.length < 8 || newPassword.length > 32) {
+      return res.json({
+        error:
+          "New Password is required and it must be between 8-32 characters",
+      });
+    }
+
+    if (newPassword !== newPasswordAgain) {
+      return res.json({
+        error: "New Password and New Password Again are not same",
+      });
+    }
+
+    if (
+      !securityQuestion ||
+      securityQuestion === "Please select a security question."
+    ) {
+      return res.json({
+        error: "Security Question is required",
+      });
+    }
+
+    if (!security) {
+      return res.json({
+        error: "Security Question's Answer is required",
+      });
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+    await User.findByIdAndUpdate(user._id, {
+      password: hashedPassword,
+      securityQuestion: securityQuestion,
+      security: security,
+    });
+
+    return res.json({
+      ok: true,
+    });
+  } catch (err) {
+    return res.json({
+      error: err,
+    });
+  }
 };
 
 module.exports = [

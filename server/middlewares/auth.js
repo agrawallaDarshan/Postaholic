@@ -7,4 +7,5 @@ const requireSignIn = expressJwt({
   algorithms: ["HS256"],
 });
 
+
 module.exports = [requireSignIn];

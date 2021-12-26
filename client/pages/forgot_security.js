@@ -51,6 +51,7 @@ const forgotSecurity = () => {
 
         if (data.error) {
           setLoading(false);
+          setVerificationCode("");
           toast.error(data.error);
         } else {
           setLoading(false);
@@ -96,6 +97,16 @@ const forgotSecurity = () => {
             loading={false}
             page="forgot_security"
           />
+        </div>
+
+        <div className="row">
+          <div className="col">
+            <p className="text-center">
+              <Link href="/login">
+                <a>Back to login</a>
+              </Link>
+            </p>
+          </div>
         </div>
 
         <div className="row">

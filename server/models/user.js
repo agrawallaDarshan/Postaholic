@@ -30,9 +30,6 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    verificationCode: {
-      type: String,
-    },
     about: {},
     photo: String,
     following: [{ type: Schema.ObjectId, ref: "User" }],

@@ -8,8 +8,8 @@ import AuthForm from "../components/forms/AuthForm";
 import { useRouter } from "next/router";
 
 const Login = () => {
-  const [email, setEmail] = useState("darshan@gmail.com");
-  const [password, setPassword] = useState("darshan@react");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [state, setState] = useContext(UserContext);
   const router = useRouter();
