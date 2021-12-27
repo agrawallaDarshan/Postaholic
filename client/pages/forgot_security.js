@@ -35,7 +35,7 @@ const forgotSecurity = () => {
         }
       } catch (err) {
         setLoading(false);
-        toast.error(err);
+        toast.error("Something Wrong happened.. Please try again!!");
       }
     } else {
       try {

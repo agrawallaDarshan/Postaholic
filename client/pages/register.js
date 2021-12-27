@@ -49,7 +49,7 @@ const Register = () => {
         setLoading(false);
       }
     } catch (err) {
-      toast.error(err.response.data);
+      toast.error("Something Wrong happened.. Please try again!!");
       setLoading(false);
     }
   };
