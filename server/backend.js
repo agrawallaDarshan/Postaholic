@@ -8,7 +8,7 @@ const fs = require("fs");
 const router = require("./routes/auth");
 
 app.get("/", (req, res) => {
-  res.send({"message":"hello world"});
+  res.send({ message: "hello world" });
 });
 
 //connecting mongodb
@@ -29,7 +29,7 @@ app.use(
 
 //loading routers synchronously
 fs.readdirSync("./routes").forEach((routeFile) => {
-  console.log(routeFile);
+  // console.log(mongoose.Schema.ObjectId);
   app.use("/api", require(`./routes/${routeFile}`));
 });
 
