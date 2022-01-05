@@ -27,6 +27,24 @@ const Home = () => {
     }
   };
 
+  const handleImage = async (e) => {
+    // console.log(e.target.files[0]);
+    //FormData -> FormData interface provides a way to easily construct a key/value pair, representing different form fields(image, pdf, docx) and their corresponding values.
+    //We store the input file data in the form of formdata which can be easily send to the backend/server
+    const file = e.target.files[0];
+    let formData = new FormData();
+    //FormData constructor is available in the browser side
+    //use formData.append(key, value) to store file
+    formData.append("image", file);
+
+    try {
+      const { data } = await axios.post("/upload-image", formData);
+      console.log(data);
+    } catch (err) {
+      toast.error("Something wrong happened");
+    }
+  };
+
   return (
     <UserValidation>
       <div className="container-fluid">
@@ -41,6 +59,7 @@ const Home = () => {
               postContent={postContent}
               setPostContent={setPostContent}
               postSubmit={postSubmit}
+              handleImage={handleImage}
             />
           </div>
           <div className="col-md-4">Slidebar</div>

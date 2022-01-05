@@ -1,4 +1,12 @@
 const Post = require("../models/post");
+const cloudinary = require("cloudinary");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
 
 const postForm = async (req, res) => {
   const { postContent } = req.body;
@@ -25,4 +33,18 @@ const postForm = async (req, res) => {
   }
 };
 
-module.exports = [postForm];
+const uploadImage = async (req, res) => {
+  // console.log(req.files);
+  try {
+    const result = await cloudinary.uploader.upload(req.files.image.path);
+    // console.log(result);
+    res.json({
+      url: result.url,
+      public_id: result.public_id,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = [postForm, uploadImage];

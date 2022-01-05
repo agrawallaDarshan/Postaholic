@@ -11,8 +11,9 @@ const ReactQuill = dynamic(
   { ssr: false }
 );
 import "react-quill/dist/quill.snow.css";
+import { CameraFilled } from "@ant-design/icons";
 
-const PostForm = ({ postContent, setPostContent, postSubmit }) => {
+const PostForm = ({ postContent, setPostContent, postSubmit, handleImage }) => {
   return (
     <div className="card">
       <div className="card-body">
@@ -29,7 +30,7 @@ const PostForm = ({ postContent, setPostContent, postSubmit }) => {
         </form>
       </div>
 
-      <div className="card-footer">
+      <div className="card-footer d-flex justify-content-between">
         <button
           disabled={!postContent}
           onClick={postSubmit}
@@ -37,6 +38,17 @@ const PostForm = ({ postContent, setPostContent, postSubmit }) => {
         >
           Post
         </button>
+
+        {/* Used the accept tag to specify the content of file which this input field will accept */}
+        <label>
+          <CameraFilled />
+          <input
+            onChange={handleImage}
+            type="file"
+            accept="image/*"
+            hidden
+          />
+        </label>
       </div>
     </div>
   );
