@@ -12,8 +12,21 @@ const ReactQuill = dynamic(
 );
 import "react-quill/dist/quill.snow.css";
 import { CameraFilled } from "@ant-design/icons";
+import { Avatar } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import Link from "next/link";
+import { Modal } from "antd";
+import { useState } from "react";
 
-const PostForm = ({ postContent, setPostContent, postSubmit, handleImage }) => {
+const PostForm = ({
+  postContent,
+  setPostContent,
+  postSubmit,
+  handleImage,
+  image,
+  uploading,
+}) => {
+  const [ok, setOk] = useState(false);
   return (
     <div className="card">
       <div className="card-body">
@@ -34,21 +47,37 @@ const PostForm = ({ postContent, setPostContent, postSubmit, handleImage }) => {
         <button
           disabled={!postContent}
           onClick={postSubmit}
-          className="btn btn-primary btn-sm"
+          className="btn btn-primary btn-sm my-1 mx-1"
         >
           Post
         </button>
-
-        {/* Used the accept tag to specify the content of file which this input field will accept */}
-        <label>
-          <CameraFilled />
-          <input
-            onChange={handleImage}
-            type="file"
-            accept="image/*"
-            hidden
-          />
-        </label>
+        <div>
+          <button
+            className="btn btn-primary btn-sm my-1 mx-2"
+            onClick={() => {
+              console.log("Hello");
+            }}
+            hidden={image && image.url === undefined}
+          >
+            Edit
+          </button>
+          <label className="my-1 mx-2">
+            {image && image.url ? (
+              <Avatar size={35} src={image.url} shape="square" />
+            ) : uploading ? (
+              <LoadingOutlined />
+            ) : (
+              <CameraFilled />
+            )}
+            <input
+              //Used the accept tag to specify the content of file which this input field will accept
+              onChange={handleImage}
+              type="file"
+              accept="image/*"
+              hidden
+            />
+          </label>
+        </div>
       </div>
     </div>
   );

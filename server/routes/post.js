@@ -17,4 +17,7 @@ router.post(
   fs[1]
 );
 
+//user posts
+router.get("/user-posts", fs1[0], fs[2]);
+
 module.exports = router;

@@ -17,6 +17,8 @@ const UserProvider = ({ children }) => {
   //In this way we can wrap our app components inside UserContext
   //children means the home, nav, login... components etc..
   //The user and token variables are now available for the whole app componets
+
+  //Empty array in useEffect means array with no dependancies i.e, the function will trigger exactly once
   useEffect(() => {
     setState(JSON.parse(window.localStorage.getItem("user_details")));
   }, []);

@@ -9,7 +9,7 @@ cloudinary.config({
 });
 
 const postForm = async (req, res) => {
-  const { postContent } = req.body;
+  const { postContent, image } = req.body;
   //Token Format : { _id: '##########', iat: 1641222733, exp: 1641654733 }
   // console.log(req.user);
   if (!postContent) {
@@ -21,6 +21,7 @@ const postForm = async (req, res) => {
     const post = new Post({
       postContent: postContent,
       postedBy: req.user._id,
+      image: image,
     });
     await post.save();
     return res.json({
@@ -41,10 +42,27 @@ const uploadImage = async (req, res) => {
     res.json({
       url: result.url,
       public_id: result.public_id,
+      message: "Image uploaded successfully",
     });
   } catch (err) {
     console.log(err);
   }
 };
 
-module.exports = [postForm, uploadImage];
+const userPosts = async (req, res) => {
+  try {
+    //mongodb queries
+    //populate() => Basically it uses to join or link two mongoose schemas. If we call populate function then an array of documents will be returned from the ref mongoose schema which will replace the original _id.
+    //Sort() => sort the results (-1  = Desc and 1 = Asc)
+    const posts = await Post.find({ postedBy: req.user._id })
+      .populate("postedBy", "_id name photo")
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    res.json(posts);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = [postForm, uploadImage, userPosts];

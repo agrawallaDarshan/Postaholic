@@ -11,7 +11,7 @@ const postSchema = new mongoose.Schema(
       type: ObjectId,
       ref: "User",
     },
-    Image: {
+    image: {
       url: String,
       public_id: String,
     },

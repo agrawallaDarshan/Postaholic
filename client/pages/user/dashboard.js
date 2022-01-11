@@ -1,12 +1,45 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { UserContext } from "../../context/index";
 import UserValidation from "../../components/routes/userRoute";
 import PostForm from "../../components/forms/PostForm";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Drawer } from "antd";
+import UserPost from "../../components/posts/UserPost";
 
 const Home = () => {
+  const [state, setState] = useContext(UserContext);
   const [postContent, setPostContent] = useState("");
+  const [image, setImage] = useState({});
+  const [uploading, setUploading] = useState(false);
+  const [posts, setPosts] = useState([]);
+
+  const [visible, setVisible] = useState(false);
+
+  const onClose = () => {
+    setVisible(false);
+  };
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
+  //useEffect(function, dependancies);
+  useEffect(() => {
+    if (state && state.jwtToken) {
+      fetchUserPosts();
+    }
+  }, [state && state.jwtToken]);
+
+  const fetchUserPosts = async () => {
+    try {
+      const { data } = await axios.get("/user-posts");
+      setPosts(data);
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const postSubmit = async (e) => {
     e.preventDefault();
@@ -14,6 +47,7 @@ const Home = () => {
     try {
       const { data } = await axios.post("/create-post", {
         postContent,
+        image,
       });
       if (data.error) {
         toast.error(data.error);
@@ -21,6 +55,7 @@ const Home = () => {
         toast.success(data.message);
       }
       setPostContent("");
+      setImage("");
     } catch (err) {
       // console.log("err => ", err);
       toast.error("Something wrong happened.. Please try again");
@@ -37,10 +72,24 @@ const Home = () => {
     //use formData.append(key, value) to store file
     formData.append("image", file);
 
+    setUploading(true);
     try {
       const { data } = await axios.post("/upload-image", formData);
-      console.log(data);
+      // console.log(data);
+      setImage({
+        url: data.url,
+        public_id: data.public_id,
+      });
+
+      setUploading(false);
+
+      if (data.message) {
+        toast.success(data.message);
+      } else {
+        toast.error("Something wrong happened... please try again!!");
+      }
     } catch (err) {
+      setUploading(false);
       toast.error("Something wrong happened");
     }
   };
@@ -53,17 +102,48 @@ const Home = () => {
             <h1 className="display-1 text-center">Dashboard Page</h1>
           </div>
         </div>
+        <button
+          className="btn btn-primary btn-sm"
+          onClick={showDrawer}
+          style={{ position: "fixed", bottom: "2rem", right: "2rem" }}
+        >
+          Open
+        </button>
+
         <div className="row p-3">
           <div className="col-md-8">
+            <UserPost posts={posts} />
+          </div>
+          <div className="col-md-4">Slidebar</div>
+        </div>
+        <>
+          <Drawer
+            title="Drawer with extra actions"
+            placement="top"
+            onClose={onClose}
+            visible={visible}
+            // extra={
+            //   <space>
+            //     <button className="btn btn-primary btn-sm m-1" onClick={onClose}>
+            //       Cancel
+            //     </button>
+            //     <button className="btn btn-primary btn-sm m-1" onClick={onClose}>
+            //       OK
+            //     </button>
+            //   </space>
+            // }
+          >
+            {/* Drawer's content */}
             <PostForm
               postContent={postContent}
               setPostContent={setPostContent}
               postSubmit={postSubmit}
               handleImage={handleImage}
+              image={image}
+              uploading={uploading}
             />
-          </div>
-          <div className="col-md-4">Slidebar</div>
-        </div>
+          </Drawer>
+        </>
       </div>
     </UserValidation>
   );
