@@ -38,6 +38,10 @@ const postSchema = new mongoose.Schema(
         ],
       },
     ],
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

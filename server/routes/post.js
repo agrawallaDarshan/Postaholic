@@ -4,6 +4,7 @@ const formidableMiddleware = require("express-formidable");
 const router = express.Router();
 const fs = require("../controllers/post");
 const fs1 = require("../middlewares/auth");
+const fs2 = require("../middlewares/post");
 
 //So, express-formidable is something like a bridge between them, specifically an Express middleware implementation of Formidable. It is used to parse the formdata like express.json which is used to parse the json data
 
@@ -19,5 +20,9 @@ router.post(
 
 //user posts
 router.get("/user-posts", fs1[0], fs[2]);
+router.get("/user-post-edit/:_id", fs1[0], fs[3]);
+router.put("/user-post-update/:_id", fs1[0], fs2[0], fs[4]);
+router.delete("/user-post-delete/:_id", fs1[0], fs2[0], fs[5]);
+router.delete("/delete-image/:_id", fs1[0], fs[6]);
 
 module.exports = router;

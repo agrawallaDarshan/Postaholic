@@ -6,14 +6,15 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Drawer } from "antd";
 import UserPost from "../../components/posts/UserPost";
+import { PlusCircleFilled } from "@ant-design/icons";
 
 const Home = () => {
-  const [state, setState] = useContext(UserContext);
+  const [state] = useContext(UserContext);
   const [postContent, setPostContent] = useState("");
   const [image, setImage] = useState({});
   const [uploading, setUploading] = useState(false);
   const [posts, setPosts] = useState([]);
-
+  const [deleting, setDeleting] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const onClose = () => {
@@ -35,7 +36,6 @@ const Home = () => {
     try {
       const { data } = await axios.get("/user-posts");
       setPosts(data);
-      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -52,6 +52,7 @@ const Home = () => {
       if (data.error) {
         toast.error(data.error);
       } else {
+        fetchUserPosts();
         toast.success(data.message);
       }
       setPostContent("");
@@ -94,6 +95,23 @@ const Home = () => {
     }
   };
 
+  const deletePost = async (post) => {
+    try {
+      const answer = window.confirm("Are you sure?");
+      if (!answer) return;
+      setDeleting(true);
+      const { data } = await axios.delete(`/user-post-delete/${post._id}`);
+      if (data.ok) {
+        toast.success("Post deleted successfully");
+      }
+      setDeleting(false);
+      fetchUserPosts();
+    } catch (err) {
+      setDeleting(false);
+      console.log(err);
+    }
+  };
+
   return (
     <UserValidation>
       <div className="container-fluid">
@@ -102,17 +120,24 @@ const Home = () => {
             <h1 className="display-1 text-center">Dashboard Page</h1>
           </div>
         </div>
-        <button
-          className="btn btn-primary btn-sm"
+        <PlusCircleFilled
           onClick={showDrawer}
-          style={{ position: "fixed", bottom: "2rem", right: "2rem" }}
-        >
-          Open
-        </button>
-
+          style={{
+            position: "fixed",
+            bottom: "2rem",
+            right: "2rem",
+            fontSize: "3rem",
+            color: "#08c",
+            // zindex: "1"
+          }}
+        />
         <div className="row p-3">
           <div className="col-md-8">
-            <UserPost posts={posts} />
+            <UserPost
+              posts={posts}
+              deletePost={deletePost}
+              deleting={deleting}
+            />
           </div>
           <div className="col-md-4">Slidebar</div>
         </div>

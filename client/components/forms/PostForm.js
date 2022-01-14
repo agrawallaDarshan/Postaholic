@@ -14,9 +14,6 @@ import "react-quill/dist/quill.snow.css";
 import { CameraFilled } from "@ant-design/icons";
 import { Avatar } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import Link from "next/link";
-import { Modal } from "antd";
-import { useState } from "react";
 
 const PostForm = ({
   postContent,
@@ -26,7 +23,6 @@ const PostForm = ({
   image,
   uploading,
 }) => {
-  const [ok, setOk] = useState(false);
   return (
     <div className="card">
       <div className="card-body">
