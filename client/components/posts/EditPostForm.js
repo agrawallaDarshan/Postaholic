@@ -20,7 +20,7 @@ const EditPostForm = ({
   handleImage,
   post,
   uploading,
-  deleteImage
+  deleteImage,
 }) => {
   const ColorList = ["#f56a00", "#7265e6", "#ffbf00", "#00a2ae"];
   const index = 0;
@@ -39,8 +39,11 @@ const EditPostForm = ({
               {post && post.postedBy ? post.postedBy.name[0] : "User"}
             </Avatar>
             <span className="m-2 p-1">
-              {" "}
-              {post && post.postedBy ? post.postedBy.name : "U"}
+              {post && post.postedBy
+                ? post.postedBy.username
+                  ? post.postedBy.username
+                  : post.postedBy.name
+                : "U"}
             </span>
           </div>
           <div className="m-1">

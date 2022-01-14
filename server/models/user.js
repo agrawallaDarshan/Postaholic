@@ -22,6 +22,13 @@ const userSchema = new Schema(
       max: 32,
       required: true,
     },
+    username: {
+      type: String,
+      min: 6,
+      max: 24,
+      required: true,
+      unique: true,
+    },
     securityQuestion: {
       type: String,
       required: true,

@@ -2,10 +2,11 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/index";
 import { useRouter } from "next/router";
+import { Avatar } from "antd";
 
 const Nav = () => {
   const [state, setState] = useContext(UserContext);
-  const [currentLink, setCurrentLink] = useState("");     
+  const [currentLink, setCurrentLink] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -19,11 +20,11 @@ const Nav = () => {
   };
 
   return (
-    <nav className="nav bg-dark justify-content-center">
+    <nav className="nav bg-dark justify-content-between">
       <Link href="/">
-        <a
-          className={`nav-link text-light ${currentLink === "/" && "active"}`}
-        >
+        <a className={`nav-link text-light my-1 ${currentLink === "/" && "active"}`} style={{
+          "fontSize" : "1rem"
+        }}>
           Home
         </a>
       </Link>
@@ -32,9 +33,12 @@ const Nav = () => {
         <>
           <Link href="/login">
             <a
-              className={`nav-link text-light ${
+              className={`nav-link text-light my-1 ${
                 currentLink === "/login" && "active"
               }`}
+              style={{
+                "fontSize" : "1rem"
+              }}
             >
               Login
             </a>
@@ -42,30 +46,50 @@ const Nav = () => {
 
           <Link href="/register">
             <a
-              className={`nav-link text-light ${
+              className={`nav-link text-light my-1 ${
                 currentLink === "/register" && "active"
               }`}
+              style={{
+                "fontSize" : "1rem"
+              }}
             >
               Register
             </a>
           </Link>
         </>
       ) : (
-        <>
-          <Link href="/user/dashboard">
-            <a
-              className={`nav-link text-light ${
-                currentLink === "/user/dashboard" && "active"
-              }`}
+        <div>
+          <div className="btn btn-sm dropdown">
+            <button
+              className="btn btn-sm dropdown-toggle text-light"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              {state && state.user && state.user.name}
-            </a>
-          </Link>
-
-          <a onClick={logout} className="nav-link text-light">
-            Logout
-          </a>
-        </>
+              <Avatar src="https://joeschmoe.io/api/v1/random">
+              </Avatar>
+            </button>
+            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <li>
+                <Link href="/user/dashboard">
+                  <a
+                    className={`nav-link text-dark ${
+                      currentLink === "/user/dashboard" &&
+                      "text-white bg-primary"
+                    }`}
+                  >
+                    Dashboard
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <a onClick={logout} className="nav-link text-dark">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       )}
     </nav>
   );

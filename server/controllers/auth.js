@@ -7,7 +7,8 @@ const { totp } = require("otplib");
 totp.options = { digits: 6, step: 300 };
 
 const register = async (req, res) => {
-  const { name, email, password, securityQuestion, security } = req.body;
+  const { name, email, username, password, securityQuestion, security } =
+    req.body;
   //validation -> checking whether the user input datas are valid or not
   if (!name) {
     return res.json({
@@ -25,6 +26,19 @@ const register = async (req, res) => {
     if (exist) {
       return res.json({
         error: "Email already exists",
+      });
+    }
+  }
+
+  if (!username) {
+    return res.json({
+      error: "Username is required",
+    });
+  } else {
+    const exist = await User.findOne({ username });
+    if (exist) {
+      return res.json({
+        error: "Username already exists",
       });
     }
   }
@@ -55,6 +69,7 @@ const register = async (req, res) => {
   const user = new User({
     name: name,
     email: email,
+    username: username,
     password: hashedPassword,
     securityQuestion: securityQuestion,
     security: security,

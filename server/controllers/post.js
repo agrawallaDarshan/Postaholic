@@ -58,7 +58,7 @@ const userPosts = async (req, res) => {
     //Sort() => sort the results (-1  = Desc and 1 = Asc)
     // const posts = await Post.find({ postedBy: req.user._id })
     const posts = await Post.find()
-      .populate("postedBy", "_id name photo")
+      .populate("postedBy", "_id name username photo")
       .sort({ createdAt: -1 })
       .limit(10);
 
@@ -73,7 +73,7 @@ const userPostEdit = async (req, res) => {
   try {
     const post = await Post.findById(req.params._id).populate(
       "postedBy",
-      "_id name photo"
+      "_id name username photo"
     );
     return res.json({
       post: post,

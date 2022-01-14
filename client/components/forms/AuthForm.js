@@ -1,5 +1,4 @@
 import { LoadingOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
 
 const AuthForm = ({
   handleSubmit,
@@ -7,6 +6,8 @@ const AuthForm = ({
   setName,
   email,
   setEmail,
+  username,
+  setUsername,
   password,
   setPassword,
   securityQuestion,
@@ -56,6 +57,23 @@ const AuthForm = ({
           placeholder="Enter your email address"
         />
       </div>
+
+      {page !== "login" && (
+        <div className="form-group p-2">
+          <small>
+            <label className="text-muted">Enter your Username</label>
+          </small>
+          <input
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+            }}
+            type="text"
+            className="form-control"
+            placeholder="Enter your Username"
+          />
+        </div>
+      )}
 
       <div className="form-group p-2">
         <small>

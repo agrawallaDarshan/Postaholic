@@ -4,7 +4,6 @@ import PostImage from "./PostImage";
 import renderHTML from "react-render-html";
 import { UserContext } from "../../context";
 import { useContext } from "react";
-import { useRouter } from "next/router";
 import PostEditMenu from "../dropdowns/PostEditMenu";
 import {
   HeartOutlined,
@@ -16,7 +15,6 @@ import {
 
 const UserPost = ({ posts, deletePost, deleting }) => {
   const [state] = useContext(UserContext);
-  const router = useRouter();
 
   const ColorList = ["#f56a00", "#7265e6", "#ffbf00", "#00a2ae"];
   const index = Math.floor(Math.random() * ColorList.length);
@@ -36,7 +34,11 @@ const UserPost = ({ posts, deletePost, deleting }) => {
                 >
                   {post.postedBy.name[0]}
                 </Avatar>
-                <span className="m-2 p-1">{post.postedBy.name}</span>
+                <span className="m-2 p-1">
+                  {post.postedBy.username
+                    ? post.postedBy.username
+                    : post.postedBy.name}
+                </span>
               </div>
               <div className="m-1">
                 {post.isEdited

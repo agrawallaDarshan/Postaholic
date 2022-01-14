@@ -12,6 +12,7 @@ import { UserContext } from "../context";
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [securityQuestion, setSecurityQuestion] = useState("");
   const [security, setSecurity] = useState("");
@@ -31,6 +32,7 @@ const Register = () => {
       const { data } = await axios.post(`/register`, {
         name,
         email,
+        username,
         password,
         securityQuestion,
         security,
@@ -42,6 +44,7 @@ const Register = () => {
       } else {
         setName("");
         setEmail("");
+        setUsername("");
         setPassword("");
         setSecurityQuestion("");
         setSecurity("");
@@ -74,6 +77,8 @@ const Register = () => {
             setName={setName}
             email={email}
             setEmail={setEmail}
+            username={username}
+            setUsername={setUsername}
             password={password}
             setPassword={setPassword}
             securityQuestion={securityQuestion}
