@@ -114,6 +114,7 @@ const login = async (req, res) => {
     });
 
     user.password = undefined;
+    user.securityQuestion = undefined;
     user.security = undefined;
 
     return res.json({
@@ -313,6 +314,141 @@ const verifyCode = async (req, res) => {
   }
 };
 
+const updateUserProfile = async (req, res) => {
+  try {
+    const data = {};
+    if (req.body.name) {
+      data.name = req.body.name;
+    }
+
+    if (req.body.username) {
+      const username = req.body.username;
+      data.username = username;
+      const exist = await User.findOne({ username });
+      if (exist) {
+        return res.json({
+          error: "Username already exists",
+        });
+      }
+    }
+
+    if (req.body.about) {
+      data.about = req.body.about;
+    }
+
+    const user = await User.findByIdAndUpdate(req.user._id, data, {
+      new: true,
+    });
+
+    user.password = undefined;
+    user.securityQuestion = undefined;
+    user.security = undefined;
+
+    return res.json({
+      user,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened",
+    });
+  }
+};
+
+const updateUserPassword = async (req, res) => {
+  const { currentPassword, newPassword, securityQuestion, security } = req.body;
+  if (
+    !currentPassword &&
+    (!securityQuestion ||
+      securityQuestion === "Please select a security question." ||
+      !security)
+  ) {
+    return res.json({
+      error: "Please choose a security question and answer",
+    });
+  }
+
+  if (
+    (currentPassword && currentPassword.length < 8) ||
+    currentPassword.length > 32
+  ) {
+    return res.json({
+      error: "Password must be between 8-32 characters",
+    });
+  }
+
+  if (!newPassword || newPassword.length < 8 || newPassword.length > 32) {
+    return res.json({
+      error: "New password must be between 8-32 characters",
+    });
+  }
+
+  try {
+    if (currentPassword) {
+      const user = await User.findById(req.user._id);
+      const isValid = await comparePassword(currentPassword, user.password);
+
+      if (!isValid) {
+        return res.json({
+          error: "Invalid current password",
+        });
+      }
+      const hashedNewPassword = await hashPassword(newPassword);
+      const updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          password: hashedNewPassword,
+        },
+        { new: true }
+      );
+
+      updatedUser.password = undefined;
+      updatedUser.securityQuestion = undefined;
+      updatedUser.security = undefined;
+
+      return res.json({
+        updatedUser,
+      });
+    } else {
+      const user = await User.findById(req.user._id);
+
+      if (securityQuestion !== user.securityQuestion) {
+        return res.json({
+          error: "Invalid security question",
+        });
+      }
+
+      if (security !== user.security) {
+        return res.json({
+          error: "Invalid security answer",
+        });
+      }
+
+      const hashedNewPassword = await hashPassword(newPassword);
+      const updatedUser = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          password: hashedNewPassword,
+        },
+        { new: true }
+      );
+
+      updatedUser.password = undefined;
+      updatedUser.securityQuestion = undefined;
+      updatedUser.security = undefined;
+
+      return res.json({
+        updatedUser,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened, try again..",
+    });
+  }
+};
+
 module.exports = [
   register,
   login,
@@ -320,4 +456,6 @@ module.exports = [
   changePassword,
   sendEmail,
   verifyCode,
+  updateUserProfile,
+  updateUserPassword,
 ];

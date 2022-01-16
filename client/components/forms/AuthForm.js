@@ -16,6 +16,9 @@ const AuthForm = ({
   setSecurity,
   loading,
   page,
+  about,
+  setAbout,
+  isUpdatePage,
 }) => {
   const questionsArray = [
     "Please select a security question.",
@@ -55,6 +58,7 @@ const AuthForm = ({
           type="email"
           className="form-control"
           placeholder="Enter your email address"
+          disabled={isUpdatePage}
         />
       </div>
 
@@ -75,22 +79,41 @@ const AuthForm = ({
         </div>
       )}
 
-      <div className="form-group p-2">
-        <small>
-          <label className="text-muted">Enter your Password</label>
-        </small>
-        <input
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value);
-          }}
-          type="password"
-          className="form-control"
-          placeholder="Enter your password"
-        />
-      </div>
+      {isUpdatePage && (
+        <div className="form-group p-2">
+          <small>
+            <label className="text-muted">Write about yourself..</label>
+          </small>
+          <textarea
+            value={about}
+            onChange={(e) => {
+              setAbout(e.target.value);
+            }}
+            type="text"
+            className="form-control"
+            placeholder="Write about yourself"
+          />
+        </div>
+      )}
 
-      {page !== "login" && (
+      {!isUpdatePage && (
+        <div className="form-group p-2">
+          <small>
+            <label className="text-muted">Enter your Password</label>
+          </small>
+          <input
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+            type="password"
+            className="form-control"
+            placeholder="Enter your password"
+          />
+        </div>
+      )}
+
+      {page !== "login" && !isUpdatePage && (
         <div className="form-group p-2">
           <small>
             <label className="text-muted">Pick a question</label>
@@ -115,7 +138,7 @@ const AuthForm = ({
         </div>
       )}
 
-      {page !== "login" && (
+      {page !== "login" && !isUpdatePage && (
         <div className="form-group p-2">
           <small>
             <label className="text-muted">Enter your answer</label>
@@ -134,7 +157,9 @@ const AuthForm = ({
       <div className="form-group p-2">
         <button
           disabled={
-            page !== "login"
+            isUpdatePage
+              ? loading || !name || !username
+              : page !== "login"
               ? !name || !password || !email || !security || loading
               : !email || !password || loading
           }

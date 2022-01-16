@@ -22,9 +22,14 @@ const Nav = () => {
   return (
     <nav className="nav bg-dark justify-content-between">
       <Link href="/">
-        <a className={`nav-link text-light my-1 ${currentLink === "/" && "active"}`} style={{
-          "fontSize" : "1rem"
-        }}>
+        <a
+          className={`nav-link text-light my-1 ${
+            currentLink === "/" && "active"
+          }`}
+          style={{
+            fontSize: "1rem",
+          }}
+        >
           Home
         </a>
       </Link>
@@ -37,7 +42,7 @@ const Nav = () => {
                 currentLink === "/login" && "active"
               }`}
               style={{
-                "fontSize" : "1rem"
+                fontSize: "1rem",
               }}
             >
               Login
@@ -50,7 +55,7 @@ const Nav = () => {
                 currentLink === "/register" && "active"
               }`}
               style={{
-                "fontSize" : "1rem"
+                fontSize: "1rem",
               }}
             >
               Register
@@ -66,8 +71,7 @@ const Nav = () => {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <Avatar src="https://joeschmoe.io/api/v1/random">
-              </Avatar>
+              <Avatar src="https://joeschmoe.io/api/v1/random"></Avatar>
             </button>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li>
@@ -79,6 +83,18 @@ const Nav = () => {
                     }`}
                   >
                     Dashboard
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/user/profile/profile_update">
+                  <a
+                    className={`nav-link text-dark ${
+                      currentLink === "/user/profile/profile_update" &&
+                      "text-white bg-primary"
+                    }`}
+                  >
+                    Profile
                   </a>
                 </Link>
               </li>
