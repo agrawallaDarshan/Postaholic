@@ -1,7 +1,11 @@
-import { LoadingOutlined } from "@ant-design/icons";
+import { LoadingOutlined, CameraFilled } from "@ant-design/icons";
+import { Avatar } from "antd";
 
 const AuthForm = ({
   handleSubmit,
+  image,
+  handleImage,
+  uploading,
   name,
   setName,
   email,
@@ -29,6 +33,35 @@ const AuthForm = ({
 
   return (
     <form onSubmit={handleSubmit}>
+      {(page !== "login" || isUpdatePage) && (
+        <>
+          <div className="d-flex justify-content-center my-2">
+            <label>
+              {uploading ? (
+                <LoadingOutlined />
+              ) : image && image.url ? (
+                <Avatar size={80} src={image.url} shape="circle" />
+              ) : (
+                <CameraFilled />
+              )}
+              <input
+                //Used the accept tag to specify the content of file which this input field will accept
+                onChange={handleImage}
+                type="file"
+                accept="image/*"
+                hidden
+              />
+            </label>
+          </div>
+          <div className="d-flex justify-content-center">
+            <small>
+              <label className="text-muted">
+                Click the above icon to update image
+              </label>
+            </small>
+          </div>
+        </>
+      )}
       {page !== "login" && (
         <div className="form-group p-2">
           <small>

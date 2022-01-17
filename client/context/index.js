@@ -23,7 +23,7 @@ const UserProvider = ({ children }) => {
     setState(JSON.parse(window.localStorage.getItem("user_details")));
   }, []);
 
-  const token = state && state.jwtToken ? state.jwtToken : "";
+  const token = (state && state.jwtToken) ? state.jwtToken : "";
   axios.defaults.baseURL = `${process.env.NEXT_PUBLIC_API}`;
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 

@@ -7,7 +7,7 @@ const { totp } = require("otplib");
 totp.options = { digits: 6, step: 300 };
 
 const register = async (req, res) => {
-  const { name, email, username, password, securityQuestion, security } =
+  const { name, email, username, password, image, securityQuestion, security } =
     req.body;
   //validation -> checking whether the user input datas are valid or not
   if (!name) {
@@ -71,6 +71,7 @@ const register = async (req, res) => {
     email: email,
     username: username,
     password: hashedPassword,
+    image: image,
     securityQuestion: securityQuestion,
     security: security,
   });
@@ -324,11 +325,14 @@ const updateUserProfile = async (req, res) => {
     if (req.body.username) {
       const username = req.body.username;
       data.username = username;
-      const exist = await User.findOne({ username });
-      if (exist) {
-        return res.json({
-          error: "Username already exists",
-        });
+      const user = await User.findById(req.user._id);
+      if (user.username !== data.username) {
+        const exist = await User.findOne({ username });
+        if (exist) {
+          return res.json({
+            error: "Username already exists",
+          });
+        }
       }
     }
 
@@ -336,16 +340,20 @@ const updateUserProfile = async (req, res) => {
       data.about = req.body.about;
     }
 
-    const user = await User.findByIdAndUpdate(req.user._id, data, {
+    if (req.body.image) {
+      data.image = req.body.image;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, data, {
       new: true,
     });
 
-    user.password = undefined;
-    user.securityQuestion = undefined;
-    user.security = undefined;
+    updatedUser.password = undefined;
+    updatedUser.securityQuestion = undefined;
+    updatedUser.security = undefined;
 
     return res.json({
-      user,
+      updatedUser,
     });
   } catch (err) {
     console.log(err);
@@ -407,7 +415,7 @@ const updateUserPassword = async (req, res) => {
       updatedUser.security = undefined;
 
       return res.json({
-        updatedUser,
+        ok: true,
       });
     } else {
       const user = await User.findById(req.user._id);
@@ -438,7 +446,7 @@ const updateUserPassword = async (req, res) => {
       updatedUser.security = undefined;
 
       return res.json({
-        updatedUser,
+        ok: true,
       });
     }
   } catch (err) {

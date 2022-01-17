@@ -71,7 +71,14 @@ const Nav = () => {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <Avatar src="https://joeschmoe.io/api/v1/random"></Avatar>
+              <Avatar
+                src={
+                  state &&
+                  state.user &&
+                  state.user.image &&
+                  `${state.user.image.url}`
+                }
+              ></Avatar>
             </button>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li>

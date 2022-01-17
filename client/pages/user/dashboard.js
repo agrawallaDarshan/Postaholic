@@ -73,8 +73,8 @@ const Home = () => {
     //use formData.append(key, value) to store file
     formData.append("image", file);
 
-    setUploading(true);
     try {
+      setUploading(true);
       const { data } = await axios.post("/upload-image", formData);
       // console.log(data);
       setImage({

@@ -21,6 +21,13 @@ const Register = () => {
   const [state] = useContext(UserContext);
   const router = useRouter();
 
+  //image
+  const [image, setImage] = useState({
+    url: "https://joeschmoe.io/api/v1/random",
+    public_id: "",
+  });
+  const [uploading, setUploading] = useState(false);
+
   const handleSubmit = async (e) => {
     // console.log(
     //   `name : ${name}\nemail : ${email}\npassword : ${password}\nsecurity : ${security}`
@@ -34,6 +41,7 @@ const Register = () => {
         email,
         username,
         password,
+        image,
         securityQuestion,
         security,
       });
@@ -46,6 +54,7 @@ const Register = () => {
         setEmail("");
         setUsername("");
         setPassword("");
+        setImage("");
         setSecurityQuestion("");
         setSecurity("");
         setOk(data.ok);
@@ -54,6 +63,32 @@ const Register = () => {
     } catch (err) {
       toast.error("Something Wrong happened.. Please try again!!");
       setLoading(false);
+    }
+  };
+
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    let formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      setUploading(true);
+      const { data } = await axios.post("/upload-image", formData);
+      setImage({
+        url: data.url,
+        public_id: data.public_id,
+      });
+
+      setUploading(false);
+
+      if (data.message) {
+        toast.success(data.message);
+      } else {
+        toast.error("Something wrong happened... please try again!!");
+      }
+    } catch (err) {
+      setUploading(false);
+      toast.error("Something wrong happened");
     }
   };
 
@@ -73,6 +108,9 @@ const Register = () => {
         <div className="col-md-6 offset-md-3">
           <AuthForm
             handleSubmit={handleSubmit}
+            handleImage={handleImage}
+            image={image}
+            uploading={uploading}
             name={name}
             setName={setName}
             email={email}

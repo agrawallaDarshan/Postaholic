@@ -15,8 +15,13 @@ const profileUpdate = () => {
   const [loading, setLoading] = useState(false);
   const [state, setState] = useContext(UserContext);
 
+  //image
+  const [image, setImage] = useState({});
+  const [uploading, setUploading] = useState(false);
+
   useEffect(() => {
     if (state && state.user) {
+      setImage(state.user.image);
       setName(state.user.name);
       setEmail(state.user.email);
       setUsername(state.user.username);
@@ -25,16 +30,13 @@ const profileUpdate = () => {
   }, [state && state.user]);
 
   const handleSubmit = async (e) => {
-    // console.log(
-    //   `name : ${name}\nemail : ${email}\npassword : ${password}\nsecurity : ${security}`
-    // );
-    //await operator is used to wait for a Promise.;
     e.preventDefault();
     try {
       setLoading(true);
       const { data } = await axios.put("/user-profile-update", {
         name,
         username,
+        image,
         about,
       });
 
@@ -44,10 +46,10 @@ const profileUpdate = () => {
       } else {
         //updating localstorage
         let user_details = JSON.parse(localStorage.getItem("user_details"));
-        user_details.user = data;
+        user_details.user = data.updatedUser;
         localStorage.setItem("user_details", JSON.stringify(user_details));
         //updating usercontext
-        setState({ ...state, user: data });
+        setState({ ...state, user: data.updatedUser });
 
         setLoading(false);
         setOk(true);
@@ -56,6 +58,32 @@ const profileUpdate = () => {
       toast.error("Oops! something wrong happened");
       setLoading(false);
       console.log(err);
+    }
+  };
+
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    let formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      setUploading(true);
+      const { data } = await axios.post("/upload-image", formData);
+      setImage({
+        url: data.url,
+        public_id: data.public_id,
+      });
+
+      setUploading(false);
+
+      if (data.message) {
+        toast.success(data.message);
+      } else {
+        toast.error("Something wrong happened... please try again!!");
+      }
+    } catch (err) {
+      setUploading(false);
+      toast.error("Something wrong happened");
     }
   };
 
@@ -71,6 +99,9 @@ const profileUpdate = () => {
         <div className="col-md-6 offset-md-3">
           <AuthForm
             handleSubmit={handleSubmit}
+            handleImage={handleImage}
+            image={image}
+            uploading={uploading}
             name={name}
             setName={setName}
             email={email}
