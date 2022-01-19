@@ -457,6 +457,68 @@ const updateUserPassword = async (req, res) => {
   }
 };
 
+const findPeople = async (req, res) => {
+  try {
+    let num = 10;
+    const user = await User.findById(req.user._id);
+    let followers = user.following;
+    followers.push(user._id);
+
+    // nin refers to not include, it will find all the users which id does not match with followers(array of ids).
+    //select -> it specifies the field and "-password or -fieldName" means it will select all the fields excluding those field
+    const people = await User.find({ _id: { $nin: followers } })
+      .select("-password -securityQuestion -security")
+      .limit(num);
+
+    res.json(people);
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened, try again..",
+    });
+  }
+};
+
+//middleware
+//$addToSet : => It is used to avoid the adding of duplicate elements in the database
+const addFollower = async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(req.body._id, {
+      $addToSet: {
+        followers: req.user._id,
+      },
+    });
+
+    next();
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened..Please try again",
+    });
+  }
+};
+
+const addFollowing = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $addToSet: {
+          following: req.body._id,
+        },
+      },
+      { new: true }
+    ).select("-password -securityQuestion -security");
+
+    return res.json(user);
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened..Please try again",
+    });
+  }
+};
+
 module.exports = [
   register,
   login,
@@ -466,4 +528,7 @@ module.exports = [
   verifyCode,
   updateUserProfile,
   updateUserPassword,
+  findPeople,
+  addFollower,
+  addFollowing,
 ];

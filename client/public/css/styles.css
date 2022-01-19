@@ -5,3 +5,8 @@
 .active {
   background-color: black;
 }
+
+.follow {
+  cursor: pointer;
+}
+

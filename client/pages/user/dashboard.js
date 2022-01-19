@@ -7,15 +7,19 @@ import { toast } from "react-toastify";
 import { Drawer } from "antd";
 import UserPost from "../../components/posts/UserPost";
 import { PlusCircleFilled } from "@ant-design/icons";
+import FollowerLayout from "../../components/users/FollowerLayout";
 
 const Home = () => {
-  const [state] = useContext(UserContext);
+  const [state, setState] = useContext(UserContext);
   const [postContent, setPostContent] = useState("");
   const [image, setImage] = useState({});
   const [uploading, setUploading] = useState(false);
   const [posts, setPosts] = useState([]);
   const [deleting, setDeleting] = useState(false);
   const [visible, setVisible] = useState(false);
+
+  //people
+  const [people, setPeople] = useState([]);
 
   const onClose = () => {
     setVisible(false);
@@ -29,6 +33,7 @@ const Home = () => {
   useEffect(() => {
     if (state && state.jwtToken) {
       fetchUserPosts();
+      findPeopleToFollow();
     }
   }, [state && state.jwtToken]);
 
@@ -36,6 +41,15 @@ const Home = () => {
     try {
       const { data } = await axios.get("/user-posts");
       setPosts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const findPeopleToFollow = async () => {
+    try {
+      const { data } = await axios.get("/find-people");
+      setPeople(data);
     } catch (err) {
       console.log(err);
     }
@@ -112,6 +126,28 @@ const Home = () => {
     }
   };
 
+  const handleFollow = async (user) => {
+    try {
+      const { data } = await axios.put("/user-follow", {
+        _id: user._id,
+      });
+      //update the localstorage
+      let user_details = JSON.parse(localStorage.getItem("user_details"));
+      user_details.user = data;
+      localStorage.setItem("user_details", JSON.stringify(user_details));
+      //Update the context
+      setState({ ...state, user: data });
+      //filtering the followed user in the client side
+      let unfollowedPeople = people.filter((person) => {
+        return person._id !== user._id;
+      });
+      toast.info(`You started following ${user.username}`);
+      setPeople(unfollowedPeople);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <UserValidation>
       <div className="container-fluid">
@@ -139,7 +175,10 @@ const Home = () => {
               deleting={deleting}
             />
           </div>
-          <div className="col-md-4">Slidebar</div>
+          <div className="col-md-4">
+            {/* <pre>{JSON.stringify(people, null, 4)}</pre> */}
+            <FollowerLayout people={people} handleFollow={handleFollow} />
+          </div>
         </div>
         <>
           <Drawer

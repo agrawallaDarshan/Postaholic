@@ -14,4 +14,8 @@ router.post("/verify-code", fs[5]);
 router.put("/user-profile-update", fs1[0], fs[6]);
 router.put("/user-password-update", fs1[0], fs[7]);
 
+//user follow and unfollow
+router.get("/find-people", fs1[0], fs[8]);
+router.put("/user-follow", fs1[0], fs[9], fs[10]);
+
 module.exports = router;
