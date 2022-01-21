@@ -8,6 +8,7 @@ import { Drawer } from "antd";
 import UserPost from "../../components/posts/UserPost";
 import { PlusCircleFilled } from "@ant-design/icons";
 import FollowerLayout from "../../components/users/FollowerLayout";
+import Link from "next/link";
 
 const Home = () => {
   const [state, setState] = useContext(UserContext);
@@ -142,6 +143,7 @@ const Home = () => {
         return person._id !== user._id;
       });
       toast.info(`You started following ${user.username}`);
+      fetchUserPosts();
       setPeople(unfollowedPeople);
     } catch (err) {
       console.log(err);
@@ -177,6 +179,18 @@ const Home = () => {
           </div>
           <div className="col-md-4">
             {/* <pre>{JSON.stringify(people, null, 4)}</pre> */}
+            <div className="d-flex justify-content-between">
+              {state && state.user && state.user.following && (
+                <Link href="/user/following">
+                  <a className="h5">{state.user.following.length} Following</a>
+                </Link>
+              )}
+              {state && state.user && state.user.following && (
+                <Link href="/user/followers">
+                  <a className="h5">{state.user.followers.length} Followers</a>
+                </Link>
+              )}
+            </div>
             <FollowerLayout people={people} handleFollow={handleFollow} />
           </div>
         </div>

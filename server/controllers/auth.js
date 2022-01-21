@@ -519,6 +519,124 @@ const addFollowing = async (req, res) => {
   }
 };
 
+const getFollowing = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const following = await User.find({
+      _id: user.following,
+    })
+      .limit(10)
+      .select("-password -securityQuestion -security");
+
+    res.json(following);
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened..Please try again",
+    });
+  }
+};
+
+const removeFollower = async (req, res, next) => {
+  try {
+    //remove follower
+    const user = await User.findByIdAndUpdate(
+      req.body._id,
+      {
+        $pull: { followers: req.user._id },
+      },
+      { new: true }
+    );
+
+    next();
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened..Please try again",
+    });
+  }
+};
+
+const removeFollowing = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $pull: { following: req.body._id },
+      },
+      {
+        new: true,
+      }
+    ).select("-password -securityQuestion -security");
+
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened..Please try again",
+    });
+  }
+};
+
+const getFollowers = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    const followers = await User.find({
+      _id: user.followers,
+    })
+      .select("-password -securityQuestion -security")
+      .limit(10);
+
+    res.json(followers);
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened..Please try again",
+    });
+  }
+};
+
+const fRemoveFollowing = async (req, res, next) => {
+  try {
+    //remove follower
+    const user = await User.findByIdAndUpdate(
+      req.body._id,
+      {
+        $pull: { following: req.user._id },
+      },
+      { new: true }
+    );
+
+    next();
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened..Please try again",
+    });
+  }
+};
+
+const fRemoveFollower = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        $pull: { followers: req.body._id },
+      },
+      {
+        new: true,
+      }
+    ).select("-password -securityQuestion -security");
+
+    res.json(user);
+  } catch (err) {
+    console.log(err);
+    return res.json({
+      error: "Something wrong happened..Please try again",
+    });
+  }
+};
+
 module.exports = [
   register,
   login,
@@ -531,4 +649,10 @@ module.exports = [
   findPeople,
   addFollower,
   addFollowing,
+  getFollowing,
+  removeFollower,
+  removeFollowing,
+  getFollowers,
+  fRemoveFollowing,
+  fRemoveFollower,
 ];

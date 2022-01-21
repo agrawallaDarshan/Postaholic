@@ -1,4 +1,5 @@
 const Post = require("../models/post");
+const User = require("../models/user");
 const cloudinary = require("cloudinary");
 
 cloudinary.config({
@@ -57,7 +58,18 @@ const userPosts = async (req, res) => {
     //populate() => Basically it uses to join or link two mongoose schemas. If we call populate function then an array of documents will be returned from the ref mongoose schema which will replace the original _id.
     //Sort() => sort the results (-1  = Desc and 1 = Asc)
     // const posts = await Post.find({ postedBy: req.user._id })
-    const posts = await Post.find()
+
+    //Now we have to render all posts of the user and the people sh/e followed
+    const user = await User.findById(req.user._id);
+    let following = user.following;
+    following.push(user._id);
+
+    //$in => It means search for these content which are present in a particular data structure
+    const posts = await Post.find({
+      postedBy: {
+        $in: following,
+      },
+    })
       .populate("postedBy", "_id name username photo")
       .sort({ createdAt: -1 })
       .limit(10);
