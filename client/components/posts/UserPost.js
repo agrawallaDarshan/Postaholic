@@ -1,10 +1,11 @@
-import { Avatar, Dropdown } from "antd";
+import { Avatar, Dropdown, List } from "antd";
 import moment from "moment";
 import PostImage from "./PostImage";
 import renderHTML from "react-render-html";
 import { UserContext } from "../../context";
 import { useContext } from "react";
 import PostEditMenu from "../dropdowns/PostEditMenu";
+import Link from "next/link";
 import {
   HeartOutlined,
   HeartFilled,
@@ -13,9 +14,15 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 
-const UserPost = ({ posts, deletePost, deleting }) => {
+const UserPost = ({
+  posts,
+  deletePost,
+  deleting,
+  handleLike,
+  handleUnlike,
+  handleComment,
+}) => {
   const [state] = useContext(UserContext);
-
   const ColorList = ["#f56a00", "#7265e6", "#ffbf00", "#00a2ae"];
   const index = Math.floor(Math.random() * ColorList.length);
   return (
@@ -26,14 +33,7 @@ const UserPost = ({ posts, deletePost, deleting }) => {
             <div className="card-header d-flex justify-content-between">
               {/* Image//Name//Moment */}
               <div>
-                <Avatar
-                  size={35}
-                  style={{
-                    backgroundColor: `${ColorList[index]}`,
-                  }}
-                >
-                  {post.postedBy.name[0]}
-                </Avatar>
+                <Avatar size={35} src={post.postedBy.image.url}></Avatar>
                 <span className="m-2 p-1">
                   {post.postedBy.username
                     ? post.postedBy.username
@@ -52,16 +52,50 @@ const UserPost = ({ posts, deletePost, deleting }) => {
             </div>
             <div className="card-footer d-flex justify-content-between">
               <div>
-                <HeartOutlined
-                  className="text-danger h4 p-1"
-                  style={{ cursor: "pointer" }}
-                ></HeartOutlined>
-                <span className="p-1">3 likes</span>
+                {state &&
+                state.user &&
+                post.likes &&
+                post.likes.includes(state.user._id) ? (
+                  <HeartFilled
+                    className="text-danger h4 p-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      handleUnlike(post._id);
+                    }}
+                  ></HeartFilled>
+                ) : (
+                  <HeartOutlined
+                    className="text-danger h4 p-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      handleLike(post._id);
+                    }}
+                  ></HeartOutlined>
+                )}
+
+                <span className="p-1">
+                  {post.likes.length != 0
+                    ? post.likes.length == 1
+                      ? `${post.likes.length} like`
+                      : `${post.likes.length} likes`
+                    : ``}
+                </span>
                 <CommentOutlined
                   className="text-danger h4 p-1 mx-1"
                   style={{ cursor: "pointer" }}
+                  onClick={() => handleComment(post)}
                 ></CommentOutlined>
-                <span className="p-1">4 comments</span>
+                <span className="p-1">
+                  <Link href={`/user/comments/${post._id}`}>
+                    <a>
+                      {post && post.comments && post.comments.length
+                        ? post.comments == 1
+                          ? "1 comment"
+                          : `${post.comments.length} comments`
+                        : ""}
+                    </a>
+                  </Link>
+                </span>
               </div>
 
               {state && state.user && state.user._id === post.postedBy._id && (
@@ -79,6 +113,27 @@ const UserPost = ({ posts, deletePost, deleting }) => {
                 </Dropdown>
               )}
             </div>
+            {post.comments && post.comments.length > 0 && (
+              <div className="card-footer" style={{ backgroundColor: "white" }}>
+                <List
+                  itemLayout="horizontal"
+                  dataSource={post.comments}
+                  renderItem={(item) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar
+                            src={item.postedBy.image && item.postedBy.image.url}
+                          />
+                        }
+                        title={item.postedBy.username}
+                        description={item.content}
+                      />
+                    </List.Item>
+                  )}
+                />
+              </div>
+            )}
           </div>
         ))}
     </>

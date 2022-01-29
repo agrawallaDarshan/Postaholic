@@ -18,16 +18,16 @@ const postSchema = new mongoose.Schema(
     likes: [{ type: ObjectId, ref: "User" }],
     comments: [
       {
-        type: String,
+        content: String,
         createdAt: { type: Date, default: Date.now() },
         postedBy: {
           type: ObjectId,
           ref: "User",
         },
         likes: [{ type: ObjectId, ref: "User" }],
-        replies: [
+        reply: [
           {
-            type: String,
+            content: String,
             createdAt: { type: Date, default: Date.now() },
             postedBy: {
               type: ObjectId,

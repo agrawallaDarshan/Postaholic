@@ -25,4 +25,10 @@ router.put("/user-post-update/:_id", fs1[0], fs2[0], fs[4]);
 router.delete("/user-post-delete/:_id", fs1[0], fs2[0], fs[5]);
 router.delete("/delete-image/:_id", fs1[0], fs[6]);
 
+//like-unlike post
+router.put("/like-post", fs1[0], fs[7]);
+router.put("/unlike-post", fs1[0], fs[8]);
+
+//post, delete and reply comments
+router.put("/add-post-comment", fs1[0], fs[9]);
 module.exports = router;

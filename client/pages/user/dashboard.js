@@ -8,7 +8,9 @@ import { Drawer } from "antd";
 import UserPost from "../../components/posts/UserPost";
 import { PlusCircleFilled } from "@ant-design/icons";
 import FollowerLayout from "../../components/users/FollowerLayout";
+import CommentForm from "../../components/forms/CommentForm";
 import Link from "next/link";
+import { Modal } from "antd";
 
 const Home = () => {
   const [state, setState] = useContext(UserContext);
@@ -21,6 +23,11 @@ const Home = () => {
 
   //people
   const [people, setPeople] = useState([]);
+
+  //comments
+  const [comment, setComment] = useState("");
+  const [currentPost, setCurrentPost] = useState({});
+  const [commentVisible, setCommentVisible] = useState(false);
 
   const onClose = () => {
     setVisible(false);
@@ -150,6 +157,59 @@ const Home = () => {
     }
   };
 
+  const handleLike = async (postId) => {
+    try {
+      const { data } = await axios.put("/like-post", {
+        _id: postId,
+      });
+
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+      toast.error("Something wrong happened... please try again!!");
+    }
+  };
+
+  const handleUnlike = async (postId) => {
+    try {
+      const { data } = await axios.put("/unlike-post", {
+        _id: postId,
+      });
+
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+      toast.error("Something wrong happened... please try again!!");
+    }
+  };
+
+  const handleComment = async (post) => {
+    setCurrentPost(post);
+    setCommentVisible(true);
+  };
+
+  const addComment = async (e) => {
+    e.preventDefault();
+    // console.log(currentPost);
+    // console.log(
+    //   `Post ${comment} comment on ${currentPost.postedBy.username}'s post by ${state.user.username}`
+    // );
+
+    try {
+      const { data } = await axios.put("/add-post-comment", {
+        _id: currentPost._id,
+        comment: comment,
+      });
+
+      console.log(data);
+      setCommentVisible(false);
+      setComment("");
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <UserValidation>
       <div className="container-fluid">
@@ -175,6 +235,9 @@ const Home = () => {
               posts={posts}
               deletePost={deletePost}
               deleting={deleting}
+              handleLike={handleLike}
+              handleUnlike={handleUnlike}
+              handleComment={handleComment}
             />
           </div>
           <div className="col-md-4">
@@ -222,6 +285,20 @@ const Home = () => {
             />
           </Drawer>
         </>
+      </div>
+      <div>
+        <Modal
+          visible={commentVisible}
+          onCancel={() => setCommentVisible(false)}
+          footer={null}
+          title="Comment Box"
+        >
+          <CommentForm
+            comment={comment}
+            setComment={setComment}
+            addComment={addComment}
+          />
+        </Modal>
       </div>
     </UserValidation>
   );

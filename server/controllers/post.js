@@ -70,7 +70,8 @@ const userPosts = async (req, res) => {
         $in: following,
       },
     })
-      .populate("postedBy", "_id name username photo")
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
       .sort({ createdAt: -1 })
       .limit(10);
 
@@ -146,6 +147,53 @@ const deleteUserPostImage = async (req, res) => {
   }
 };
 
+const likePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(req.body._id, {
+      $addToSet: { likes: req.user._id },
+    });
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const unlikePost = async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(req.body._id, {
+      $pull: { likes: req.user._id },
+    });
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const addPostComment = async (req, res) => {
+  try {
+    const { _id, comment } = req.body;
+    const post = await Post.findByIdAndUpdate(
+      _id,
+      {
+        $push: {
+          comments: {
+            content: comment,
+            postedBy: req.user._id,
+          },
+        },
+      },
+      { new: true }
+    )
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image");
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = [
   postForm,
   uploadImage,
@@ -154,4 +202,7 @@ module.exports = [
   updateUserPost,
   deleteUserPost,
   deleteUserPostImage,
+  likePost,
+  unlikePost,
+  addPostComment,
 ];
