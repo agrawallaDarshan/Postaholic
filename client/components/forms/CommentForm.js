@@ -1,11 +1,11 @@
-const CommentForm = ({ comment, setComment, addComment }) => {
+const CommentForm = ({ comment, setComment, addComment, reply = false }) => {
   return (
     <>
       <form>
         <input
           type="text"
           className="form-control"
-          placeholder="Drop your comment"
+          placeholder={reply ? "Drop your comment" : "Drop your reply"}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />

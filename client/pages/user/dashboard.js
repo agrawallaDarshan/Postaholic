@@ -28,6 +28,9 @@ const Home = () => {
   const [comment, setComment] = useState("");
   const [currentPost, setCurrentPost] = useState({});
   const [commentVisible, setCommentVisible] = useState(false);
+  const [currentComment, setCurrentComment] = useState({});
+  const [reply, setReply] = useState("");
+  const [replyVisible, setReplyVisible] = useState(false);
 
   const onClose = () => {
     setVisible(false);
@@ -190,7 +193,7 @@ const Home = () => {
 
   const addComment = async (e) => {
     e.preventDefault();
-    // console.log(currentPost);
+    //console.log(currentPost);
     // console.log(
     //   `Post ${comment} comment on ${currentPost.postedBy.username}'s post by ${state.user.username}`
     // );
@@ -225,6 +228,32 @@ const Home = () => {
     }
   };
 
+  const handleCommentLike = () => {
+    //
+  };
+
+  const handleCommentUnlike = () => {
+    //
+  };
+
+  const handleReply = (post, comment) => {
+    setCurrentPost(post);
+    setCurrentComment(comment);
+    setReplyVisible(true);
+  };
+
+  const addReply = (e) => {
+    e.preventDefault();
+    console.log(
+      `${state.user.username} reply ${reply} on ${currentComment.content} of ${currentPost.postContent} posted by ${currentPost.postedBy.username}`
+    );
+    setReplyVisible(false);
+  };
+
+  const removeReply = () => {
+    //
+  };
+
   return (
     <UserValidation>
       <div className="container-fluid">
@@ -254,6 +283,9 @@ const Home = () => {
               handleUnlike={handleUnlike}
               handleComment={handleComment}
               removeComment={removeComment}
+              handleCommentLike={handleCommentLike}
+              handleCommentUnlike={handleCommentUnlike}
+              handleReply={handleReply}
             />
           </div>
           <div className="col-md-4">
@@ -313,6 +345,21 @@ const Home = () => {
             comment={comment}
             setComment={setComment}
             addComment={addComment}
+          />
+        </Modal>
+      </div>
+      <div>
+        <Modal
+          visible={replyVisible}
+          onCancel={() => setReplyVisible(false)}
+          footer={null}
+          title="Reply Box"
+        >
+          <CommentForm
+            comment={reply}
+            setComment={setReply}
+            addComment={addReply}
+            replyBox={true}
           />
         </Modal>
       </div>

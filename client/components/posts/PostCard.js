@@ -24,6 +24,9 @@ const PostCard = ({
   handleComment,
   commentNumbers = 2,
   removeComment,
+  handleCommentLike,
+  handleCommentUnlike,
+  handleReply,
 }) => {
   const [state] = useContext(UserContext);
   const ColorList = ["#f56a00", "#7265e6", "#ffbf00", "#00a2ae"];
@@ -146,7 +149,33 @@ const PostCard = ({
                             )}
                         </div>
                       }
-                      description={item.content}
+                      description={
+                        <>
+                          <div className="my-1">{item.content}</div>
+                          <div className="d-flex justify-content-between">
+                            <div>
+                              <HeartFilled
+                                className="text-danger"
+                                style={{
+                                  cursor: "pointer",
+                                  fontSize: "1.25rem",
+                                }}
+                              ></HeartFilled>
+                              <span className="mx-2 py-2 text-muted">
+                                4 likes
+                              </span>
+
+                              <span
+                                className="text-muted follow mx-2"
+                                onClick={() => handleReply(post, item)}
+                              >
+                                reply
+                              </span>
+                            </div>
+                            <span>{moment(item.createdAt).fromNow()}</span>
+                          </div>
+                        </>
+                      }
                     />
                   </List.Item>
                 )}
