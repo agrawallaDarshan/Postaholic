@@ -194,6 +194,37 @@ const addPostComment = async (req, res) => {
   }
 };
 
+const getUserPost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params._id)
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image");
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const removeUserComment = async (req, res) => {
+  try {
+    const { _id, comment } = req.body;
+    const post = await Post.findByIdAndUpdate(
+      _id,
+      {
+        $pull: { comments: { _id: comment._id } },
+      },
+      { new: true }
+    )
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image");
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = [
   postForm,
   uploadImage,
@@ -205,4 +236,6 @@ module.exports = [
   likePost,
   unlikePost,
   addPostComment,
+  getUserPost,
+  removeUserComment,
 ];

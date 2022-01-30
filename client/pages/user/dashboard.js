@@ -210,6 +210,21 @@ const Home = () => {
     }
   };
 
+  const removeComment = async (post, comment) => {
+    let answer = window.confirm("Do you really wanna delete it.");
+    if (!answer) return;
+    try {
+      const { data } = await axios.put("/remove-user-comment", {
+        _id: post._id,
+        comment: comment,
+      });
+
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <UserValidation>
       <div className="container-fluid">
@@ -238,6 +253,7 @@ const Home = () => {
               handleLike={handleLike}
               handleUnlike={handleUnlike}
               handleComment={handleComment}
+              removeComment={removeComment}
             />
           </div>
           <div className="col-md-4">

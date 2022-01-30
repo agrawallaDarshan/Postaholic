@@ -31,4 +31,6 @@ router.put("/unlike-post", fs1[0], fs[8]);
 
 //post, delete and reply comments
 router.put("/add-post-comment", fs1[0], fs[9]);
+router.get("/get-user-post/:_id", fs1[0], fs[10]);
+router.put("/remove-user-comment", fs1[0], fs[11]);
 module.exports = router;
