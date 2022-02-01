@@ -1,6 +1,7 @@
 const Post = require("../models/post");
 const User = require("../models/user");
 const cloudinary = require("cloudinary");
+const post = require("../models/post");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY,
@@ -72,6 +73,7 @@ const userPosts = async (req, res) => {
     })
       .populate("postedBy", "_id name username image")
       .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image")
       .sort({ createdAt: -1 })
       .limit(10);
 
@@ -187,7 +189,9 @@ const addPostComment = async (req, res) => {
       { new: true }
     )
       .populate("postedBy", "_id name username image")
-      .populate("comments.postedBy", "_id name username image");
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+
     return res.json(post);
   } catch (err) {
     console.log(err);
@@ -198,7 +202,8 @@ const getUserPost = async (req, res) => {
   try {
     const post = await Post.findById(req.params._id)
       .populate("postedBy", "_id name username image")
-      .populate("comments.postedBy", "_id name username image");
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
 
     return res.json(post);
   } catch (err) {
@@ -225,6 +230,163 @@ const removeUserComment = async (req, res) => {
   }
 };
 
+const addUserReply = async (req, res) => {
+  try {
+    // console.log(req.user._id, req.body);
+    const { postId, commentId, content } = req.body;
+    const post = await Post.findOneAndUpdate(
+      {
+        _id: postId,
+        "comments._id": commentId,
+      },
+      {
+        $push: {
+          "comments.$.reply": {
+            content: content,
+            postedBy: req.user._id,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    )
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const removeUserReply = async (req, res) => {
+  try {
+    // console.log(req.user._id, req.body);
+    const { postId, commentId, replyId } = req.body;
+    const post = await Post.findOneAndUpdate(
+      {
+        _id: postId,
+        "comments._id": commentId,
+      },
+      {
+        $pull: {
+          "comments.$.reply": {
+            _id: replyId,
+          },
+        },
+      },
+      {
+        new: true,
+      }
+    )
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const likeComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req.body;
+    const post = await Post.findOneAndUpdate(
+      {
+        _id: postId,
+        "comments._id": commentId,
+      },
+      {
+        $push: {
+          "comments.$.likes": { _id: req.user._id },
+        },
+      },
+      { new: true }
+    )
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const unlikeComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req.body;
+    console.log(postId, commentId, req.user._id);
+    const post = await Post.findOneAndUpdate(
+      { _id: "postId", "comments._id": "commentId" },
+      { $pull: { "comments.$.likes": { _id: req.user._id } } },
+      { new: true }
+    )
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const likeReply = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.body;
+    const post = await Post.findOneAndUpdate(
+      {
+        _id: postId,
+        "comments._id": commentId,
+        "comments.reply._id": replyId,
+      },
+      {
+        $push: {
+          "reply.$.likes": { _id: req.user._id },
+        },
+      },
+      { new: true }
+    )
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const unlikeReply = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.body;
+    const post = await Post.findOneAndUpdate(
+      {
+        _id: postId,
+        "comments._id": commentId,
+        "comments.reply._id": replyId,
+      },
+      {
+        $pull: {
+          "reply.$.likes": { _id: req.user._id },
+        },
+      },
+      { new: true }
+    )
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = [
   postForm,
   uploadImage,
@@ -238,4 +400,10 @@ module.exports = [
   addPostComment,
   getUserPost,
   removeUserComment,
+  addUserReply,
+  removeUserReply,
+  likeComment,
+  unlikeComment,
+  likeReply,
+  unlikeReply,
 ];

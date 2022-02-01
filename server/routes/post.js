@@ -33,4 +33,13 @@ router.put("/unlike-post", fs1[0], fs[8]);
 router.put("/add-post-comment", fs1[0], fs[9]);
 router.get("/get-user-post/:_id", fs1[0], fs[10]);
 router.put("/remove-user-comment", fs1[0], fs[11]);
+router.put("/add-user-reply", fs1[0], fs[12]);
+router.put("/remove-user-reply", fs1[0], fs[13]);
+
+//likes and unlikes
+router.put("/like-comment", fs1[0], fs[14]);
+router.put("/unlike-comment", fs1[0], fs[15]);
+router.put("/like-reply", fs1[0], fs[16]);
+router.put("/unlike-reply", fs1[0], fs[17]);
+
 module.exports = router;

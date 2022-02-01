@@ -11,6 +11,7 @@ import FollowerLayout from "../../components/users/FollowerLayout";
 import CommentForm from "../../components/forms/CommentForm";
 import Link from "next/link";
 import { Modal } from "antd";
+import ReplyForm from "../../components/forms/ReplyForm";
 
 const Home = () => {
   const [state, setState] = useContext(UserContext);
@@ -228,30 +229,104 @@ const Home = () => {
     }
   };
 
-  const handleCommentLike = () => {
-    //
+  const handleCommentLike = async (post, comment) => {
+    try {
+      const { data } = await axios.put("/like-comment", {
+        postId: post._id,
+        commentId: comment._id,
+      });
+
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const handleCommentUnlike = () => {
-    //
+  const handleCommentUnlike = async (post, comment) => {
+    try {
+      console.log(post.postContent, comment.content);
+      const { data } = await axios.put("/unlike-comment", {
+        postId: post._id,
+        commentId: comment._id,
+      });
+
+      console.log(data);
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const handleReply = (post, comment) => {
+  const handleReply = async (post, comment) => {
     setCurrentPost(post);
     setCurrentComment(comment);
     setReplyVisible(true);
   };
 
-  const addReply = (e) => {
-    e.preventDefault();
-    console.log(
-      `${state.user.username} reply ${reply} on ${currentComment.content} of ${currentPost.postContent} posted by ${currentPost.postedBy.username}`
-    );
-    setReplyVisible(false);
+  const handleReplyLike = async (post, comment, reply) => {
+    try {
+      const { data } = await axios.put("/like-reply", {
+        postId: post._id,
+        commentId: comment._id,
+        replyId: reply._id,
+      });
+
+      console.log(data);
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  const removeReply = () => {
-    //
+  const handleReplyUnlike = async (post, comment, reply) => {
+    try {
+      const { data } = await axios.put("/unlike-reply", {
+        postId: post._id,
+        commentId: comment._id,
+        replyId: reply._id,
+      });
+
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const addReply = async (e) => {
+    e.preventDefault();
+    // console.log(
+    //   `${state.user.username} reply ${reply} on ${currentComment.content} of ${currentPost.postContent} posted by ${currentPost.postedBy.username}`
+    // );
+    try {
+      const { data } = await axios.put("/add-user-reply", {
+        postId: currentPost._id,
+        commentId: currentComment._id,
+        content: reply,
+      });
+
+      setReplyVisible(false);
+      setReply("");
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const removeReply = async (post, comment, reply) => {
+    // console.log(post.postContent, comment.content, reply.content);
+    let answer = window.confirm("Do you really wanna delete it.");
+    if (!answer) return;
+    try {
+      const { data } = await axios.put("/remove-user-reply", {
+        postId: post._id,
+        commentId: comment._id,
+        replyId: reply._id,
+      });
+
+      fetchUserPosts();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -286,6 +361,9 @@ const Home = () => {
               handleCommentLike={handleCommentLike}
               handleCommentUnlike={handleCommentUnlike}
               handleReply={handleReply}
+              removeReply={removeReply}
+              handleReplyLike={handleReplyLike}
+              handleReplyUnlike={handleReplyUnlike}
             />
           </div>
           <div className="col-md-4">
@@ -355,12 +433,7 @@ const Home = () => {
           footer={null}
           title="Reply Box"
         >
-          <CommentForm
-            comment={reply}
-            setComment={setReply}
-            addComment={addReply}
-            replyBox={true}
-          />
+          <ReplyForm reply={reply} setReply={setReply} addReply={addReply} />
         </Modal>
       </div>
     </UserValidation>

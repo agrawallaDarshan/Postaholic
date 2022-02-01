@@ -11,6 +11,9 @@ const UserPost = ({
   handleCommentLike,
   handleCommentUnlike,
   handleReply,
+  removeReply,
+  handleReplyLike,
+  handleReplyUnlike,
 }) => {
   return (
     <>
@@ -27,6 +30,9 @@ const UserPost = ({
             handleCommentLike={handleCommentLike}
             handleCommentUnlike={handleCommentUnlike}
             handleReply={handleReply}
+            removeReply={removeReply}
+            handleReplyLike={handleReplyLike}
+            handleReplyUnlike={handleReplyUnlike}
           />
         ))}
     </>
