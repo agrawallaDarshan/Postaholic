@@ -20,6 +20,7 @@ const UserPost = ({
       {posts &&
         posts.map((post) => (
           <PostCard
+            key={post._id}
             post={post}
             deletePost={deletePost}
             deleting={deleting}

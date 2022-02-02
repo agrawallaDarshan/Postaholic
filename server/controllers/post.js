@@ -65,17 +65,21 @@ const userPosts = async (req, res) => {
     let following = user.following;
     following.push(user._id);
 
+    const currentPage = req.params.page || 1;
+    const perPageItems = 5;
+
     //$in => It means search for these content which are present in a particular data structure
     const posts = await Post.find({
       postedBy: {
         $in: following,
       },
     })
+      .skip((currentPage - 1) * perPageItems)
       .populate("postedBy", "_id name username image")
       .populate("comments.postedBy", "_id name username image")
       .populate("comments.reply.postedBy", "_id name username image")
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(perPageItems);
 
     res.json(posts);
   } catch (err) {
@@ -399,6 +403,23 @@ const unlikeReply = async (req, res) => {
   }
 };
 
+const getTotalPosts = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    let following = user.following;
+    following.push(user._id);
+
+    const postCount = await Post.find({
+      postedBy: {
+        $in: following,
+      },
+    }).estimatedDocumentCount();
+    return res.json(postCount);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = [
   postForm,
   uploadImage,
@@ -418,4 +439,5 @@ module.exports = [
   unlikeComment,
   likeReply,
   unlikeReply,
+  getTotalPosts,
 ];

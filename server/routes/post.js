@@ -19,7 +19,7 @@ router.post(
 );
 
 //user posts
-router.get("/user-posts", fs1[0], fs[2]);
+router.get("/user-posts/:page", fs1[0], fs[2]);
 router.get("/user-post-edit/:_id", fs1[0], fs[3]);
 router.put("/user-post-update/:_id", fs1[0], fs2[0], fs[4]);
 router.delete("/user-post-delete/:_id", fs1[0], fs2[0], fs[5]);
@@ -41,5 +41,8 @@ router.put("/like-comment", fs1[0], fs[14]);
 router.put("/unlike-comment", fs1[0], fs[15]);
 router.put("/like-reply", fs1[0], fs[16]);
 router.put("/unlike-reply", fs1[0], fs[17]);
+
+//pagination
+router.get("/total-posts", fs1[0], fs[18]);
 
 module.exports = router;

@@ -10,7 +10,7 @@ import { PlusCircleFilled } from "@ant-design/icons";
 import FollowerLayout from "../../components/users/FollowerLayout";
 import CommentForm from "../../components/forms/CommentForm";
 import Link from "next/link";
-import { Modal } from "antd";
+import { Modal, Pagination } from "antd";
 import ReplyForm from "../../components/forms/ReplyForm";
 
 const Home = () => {
@@ -33,6 +33,11 @@ const Home = () => {
   const [reply, setReply] = useState("");
   const [replyVisible, setReplyVisible] = useState(false);
 
+  //pagination
+  const perPageItems = 5;
+  const [totalPosts, setTotalPosts] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const onClose = () => {
     setVisible(false);
   };
@@ -47,11 +52,15 @@ const Home = () => {
       fetchUserPosts();
       findPeopleToFollow();
     }
-  }, [state && state.jwtToken]);
+  }, [state && state.jwtToken, currentPage]);
+
+  useEffect(() => {
+    getTotalPosts();
+  }, []);
 
   const fetchUserPosts = async () => {
     try {
-      const { data } = await axios.get("/user-posts");
+      const { data } = await axios.get(`/user-posts/${currentPage}`);
       setPosts(data);
     } catch (err) {
       console.log(err);
@@ -78,9 +87,12 @@ const Home = () => {
       if (data.error) {
         toast.error(data.error);
       } else {
+        setCurrentPage(1);
         fetchUserPosts();
         toast.success(data.message);
       }
+
+      getTotalPosts();
       setPostContent("");
       setImage("");
     } catch (err) {
@@ -131,6 +143,7 @@ const Home = () => {
         toast.success("Post deleted successfully");
       }
       setDeleting(false);
+      getTotalPosts();
       fetchUserPosts();
     } catch (err) {
       setDeleting(false);
@@ -154,6 +167,7 @@ const Home = () => {
         return person._id !== user._id;
       });
       toast.info(`You started following ${user.username}`);
+      getTotalPosts();
       fetchUserPosts();
       setPeople(unfollowedPeople);
     } catch (err) {
@@ -323,6 +337,15 @@ const Home = () => {
     }
   };
 
+  const getTotalPosts = async () => {
+    try {
+      const { data } = await axios.get("/total-posts");
+      setTotalPosts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <UserValidation>
       <div className="container-fluid">
@@ -405,6 +428,15 @@ const Home = () => {
             />
           </Drawer>
         </>
+      </div>
+      <div className="d-flex justify-content-center">
+        <Pagination
+          current={currentPage}
+          total={totalPosts}
+          pageSize={perPageItems}
+          onChange={(value) => setCurrentPage(value)}
+          className="m-1 p-1"
+        />
       </div>
       <div>
         <Modal
