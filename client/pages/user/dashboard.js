@@ -244,13 +244,11 @@ const Home = () => {
 
   const handleCommentUnlike = async (post, comment) => {
     try {
-      console.log(post.postContent, comment.content);
       const { data } = await axios.put("/unlike-comment", {
         postId: post._id,
         commentId: comment._id,
       });
 
-      console.log(data);
       fetchUserPosts();
     } catch (err) {
       console.log(err);
@@ -271,7 +269,6 @@ const Home = () => {
         replyId: reply._id,
       });
 
-      console.log(data);
       fetchUserPosts();
     } catch (err) {
       console.log(err);
@@ -294,9 +291,6 @@ const Home = () => {
 
   const addReply = async (e) => {
     e.preventDefault();
-    // console.log(
-    //   `${state.user.username} reply ${reply} on ${currentComment.content} of ${currentPost.postContent} posted by ${currentPost.postedBy.username}`
-    // );
     try {
       const { data } = await axios.put("/add-user-reply", {
         postId: currentPost._id,

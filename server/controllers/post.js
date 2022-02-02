@@ -297,18 +297,20 @@ const likeComment = async (req, res) => {
     const post = await Post.findOneAndUpdate(
       {
         _id: postId,
-        "comments._id": commentId,
       },
       {
         $push: {
-          "comments.$.likes": { _id: req.user._id },
+          "comments.$[i].likes": req.user._id,
         },
       },
-      { new: true }
-    )
-      .populate("postedBy", "_id name username image")
-      .populate("comments.postedBy", "_id name username image")
-      .populate("comments.reply.postedBy", "_id name username image");
+      {
+        arrayFilters: [
+          {
+            "i._id": commentId,
+          },
+        ],
+      }
+    );
 
     return res.json(post);
   } catch (err) {
@@ -319,15 +321,17 @@ const likeComment = async (req, res) => {
 const unlikeComment = async (req, res) => {
   try {
     const { postId, commentId } = req.body;
-    console.log(postId, commentId, req.user._id);
     const post = await Post.findOneAndUpdate(
-      { _id: "postId", "comments._id": "commentId" },
-      { $pull: { "comments.$.likes": { _id: req.user._id } } },
-      { new: true }
-    )
-      .populate("postedBy", "_id name username image")
-      .populate("comments.postedBy", "_id name username image")
-      .populate("comments.reply.postedBy", "_id name username image");
+      { _id: postId },
+      { $pull: { "comments.$[j].likes": req.user._id } },
+      {
+        arrayFilters: [
+          {
+            "j._id": commentId,
+          },
+        ],
+      }
+    );
 
     return res.json(post);
   } catch (err) {
@@ -341,19 +345,23 @@ const likeReply = async (req, res) => {
     const post = await Post.findOneAndUpdate(
       {
         _id: postId,
-        "comments._id": commentId,
-        "comments.reply._id": replyId,
       },
       {
         $push: {
-          "reply.$.likes": { _id: req.user._id },
+          "comments.$[i].reply.$[j].likes": req.user._id,
         },
       },
-      { new: true }
-    )
-      .populate("postedBy", "_id name username image")
-      .populate("comments.postedBy", "_id name username image")
-      .populate("comments.reply.postedBy", "_id name username image");
+      {
+        arrayFilters: [
+          {
+            "i._id": commentId,
+          },
+          {
+            "j._id": replyId,
+          },
+        ],
+      }
+    );
 
     return res.json(post);
   } catch (err) {
@@ -367,19 +375,23 @@ const unlikeReply = async (req, res) => {
     const post = await Post.findOneAndUpdate(
       {
         _id: postId,
-        "comments._id": commentId,
-        "comments.reply._id": replyId,
       },
       {
         $pull: {
-          "reply.$.likes": { _id: req.user._id },
+          "comments.$[i].reply.$[j].likes": req.user._id,
         },
       },
-      { new: true }
-    )
-      .populate("postedBy", "_id name username image")
-      .populate("comments.postedBy", "_id name username image")
-      .populate("comments.reply.postedBy", "_id name username image");
+      {
+        arrayFilters: [
+          {
+            "i._id": commentId,
+          },
+          {
+            "j._id": replyId,
+          },
+        ],
+      }
+    );
 
     return res.json(post);
   } catch (err) {
