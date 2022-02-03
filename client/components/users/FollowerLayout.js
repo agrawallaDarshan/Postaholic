@@ -1,7 +1,10 @@
 import { List, Avatar } from "antd";
+import { useContext } from "react";
 import moment from "moment";
+import { UserContext } from "../../context";
 
-const FollowerLayout = ({ people, handleFollow }) => {
+const FollowerLayout = ({ people, handleFollow, searchUsers = true }) => {
+  const [state] = useContext(UserContext);
   return (
     <List
       itemLayout="horizontal"
@@ -21,9 +24,22 @@ const FollowerLayout = ({ people, handleFollow }) => {
             title={
               <div className="d-flex justify-content-between">
                 {user.username ? user.username : user.name}
-                <span className="text-primary follow" onClick={() => {
-                  handleFollow(user)
-                }}>Follow</span>
+                {user.followers.includes(
+                  state && state.user && state.user._id
+                ) ? (
+                  <span>Following</span>
+                ) : (
+                  !searchUsers && (
+                    <span
+                      className="text-primary follow"
+                      onClick={() => {
+                        handleFollow(user);
+                      }}
+                    >
+                      Follow
+                    </span>
+                  )
+                )}
               </div>
             }
             description={

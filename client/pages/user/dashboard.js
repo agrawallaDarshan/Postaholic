@@ -12,6 +12,7 @@ import CommentForm from "../../components/forms/CommentForm";
 import Link from "next/link";
 import { Modal, Pagination } from "antd";
 import ReplyForm from "../../components/forms/ReplyForm";
+import SearchUser from "../../components/SearchUser";
 
 const Home = () => {
   const [state, setState] = useContext(UserContext);
@@ -38,6 +39,10 @@ const Home = () => {
   const [totalPosts, setTotalPosts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
+  //UserSearch
+  const [search, setSearch] = useState("");
+  const [searchedData, setSearchData] = useState([]);
+
   const onClose = () => {
     setVisible(false);
   };
@@ -55,8 +60,12 @@ const Home = () => {
   }, [state && state.jwtToken, currentPage]);
 
   useEffect(() => {
-    getTotalPosts();
+    if (state && state.jwtToken) getTotalPosts();
   }, []);
+
+  useEffect(() => {
+    handleSearch();
+  }, [search]);
 
   const fetchUserPosts = async () => {
     try {
@@ -346,6 +355,21 @@ const Home = () => {
     }
   };
 
+  const handleSearch = async () => {
+    // console.log("Search for ", search);
+    try {
+      if (search.length == 0) {
+        setSearchData([]);
+        return;
+      }
+      const { data } = await axios.get(`/search-user/${search}`);
+      console.log(data);
+      setSearchData(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <UserValidation>
       <div className="container-fluid">
@@ -385,6 +409,14 @@ const Home = () => {
           </div>
           <div className="col-md-4">
             {/* <pre>{JSON.stringify(people, null, 4)}</pre> */}
+            <SearchUser
+              search={search}
+              setSearch={setSearch}
+              handleSearch={handleSearch}
+            />
+            {search.length > 0 && searchedData.length > 0 && (
+              <FollowerLayout people={searchedData} />
+            )}
             <div className="d-flex justify-content-between">
               {state && state.user && state.user.following && (
                 <Link href="/user/following">
@@ -397,7 +429,11 @@ const Home = () => {
                 </Link>
               )}
             </div>
-            <FollowerLayout people={people} handleFollow={handleFollow} />
+            <FollowerLayout
+              people={people}
+              handleFollow={handleFollow}
+              SearchUser={false}
+            />
           </div>
         </div>
         <>

@@ -637,6 +637,21 @@ const fRemoveFollower = async (req, res) => {
   }
 };
 
+const findSearchUsers = async (req, res) => {
+  try {
+    const users = await User.find({
+      $or: [
+        { name: { $regex: req.params.search, $options: "i" } },
+        { username: { $regex: req.params.search, $options: "i" } },
+      ],
+    }).select("_id name username image followers");
+
+    return res.json(users);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = [
   register,
   login,
@@ -655,4 +670,5 @@ module.exports = [
   getFollowers,
   fRemoveFollowing,
   fRemoveFollower,
+  findSearchUsers,
 ];

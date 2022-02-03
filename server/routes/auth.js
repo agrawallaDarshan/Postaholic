@@ -22,4 +22,7 @@ router.put("/user-unfollow", fs1[0], fs[12], fs[13]);
 router.get("/get-followers", fs1[0], fs[14]);
 router.put("/remove-follower", fs1[0], fs[15], fs[16]);
 
+//search
+router.get("/search-user/:search", fs[17]);
+
 module.exports = router;
