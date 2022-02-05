@@ -24,5 +24,6 @@ router.put("/remove-follower", fs1[0], fs[15], fs[16]);
 
 //search
 router.get("/search-user/:search", fs[17]);
+router.get("/get-user/:username", fs1[0], fs[18]);
 
 module.exports = router;

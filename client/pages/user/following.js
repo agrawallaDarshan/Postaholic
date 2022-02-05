@@ -46,6 +46,7 @@ const Following = () => {
       console.log(err);
     }
   };
+  
   return (
     <>
       <div className="row">

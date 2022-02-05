@@ -2,6 +2,7 @@ import { List, Avatar } from "antd";
 import { useContext } from "react";
 import moment from "moment";
 import { UserContext } from "../../context";
+import Link from "next/link";
 
 const FollowerLayout = ({ people, handleFollow, searchUsers = true }) => {
   const [state] = useContext(UserContext);
@@ -23,7 +24,9 @@ const FollowerLayout = ({ people, handleFollow, searchUsers = true }) => {
             }
             title={
               <div className="d-flex justify-content-between">
-                {user.username ? user.username : user.name}
+                <Link href={`/user/profile/${user.username}`}>
+                  <a>{user.username ? user.username : user.name}</a>
+                </Link>
                 {user.followers.includes(
                   state && state.user && state.user._id
                 ) ? (

@@ -381,11 +381,11 @@ const Home = () => {
         <PlusCircleFilled
           onClick={showDrawer}
           style={{
-            position: "fixed",
-            bottom: "2rem",
-            right: "2rem",
-            fontSize: "3rem",
-            color: "#08c",
+            "position": "fixed",
+            "bottom": "2rem",
+            "right": "2rem",
+            "fontSize": "3rem",
+            "color": "#08c",
             // zindex: "1"
           }}
         />
@@ -420,12 +420,26 @@ const Home = () => {
             <div className="d-flex justify-content-between">
               {state && state.user && state.user.following && (
                 <Link href="/user/following">
-                  <a className="h5">{state.user.following.length} Following</a>
+                  <a
+                    className="h5"
+                    style={{
+                      color: "#9c27b0",
+                    }}
+                  >
+                    {state.user.following.length} Following
+                  </a>
                 </Link>
               )}
               {state && state.user && state.user.following && (
                 <Link href="/user/followers">
-                  <a className="h5">{state.user.followers.length} Followers</a>
+                  <a
+                    className="h5"
+                    style={{
+                      color: "#9c27b0",
+                    }}
+                  >
+                    {state.user.followers.length} Followers
+                  </a>
                 </Link>
               )}
             </div>
