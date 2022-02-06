@@ -1,37 +1,12 @@
-import { Avatar, Dropdown, List } from "antd";
+import { Avatar, List } from "antd";
 import moment from "moment";
 import PostImage from "./PostImage";
 import renderHTML from "react-render-html";
 import { UserContext } from "../../context";
 import { useContext } from "react";
-import PostEditMenu from "../dropdowns/PostEditMenu";
-import Link from "next/link";
-import {
-  HeartOutlined,
-  HeartFilled,
-  MenuOutlined,
-  CommentOutlined,
-  LoadingOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { HeartOutlined, HeartFilled, CommentOutlined } from "@ant-design/icons";
 
-const PostCard = ({
-  post,
-  deletePost,
-  deleting,
-  handleLike,
-  handleUnlike,
-  handleComment,
-  commentNumbers = 10,
-  removeComment,
-  handleCommentLike,
-  handleCommentUnlike,
-  handleReply,
-  replyNumbers = 12,
-  removeReply,
-  handleReplyLike,
-  handleReplyUnlike
-}) => {
+const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
   const [state] = useContext(UserContext);
   const ColorList = ["#f56a00", "#7265e6", "#ffbf00", "#00a2ae"];
   const index = Math.floor(Math.random() * ColorList.length);
@@ -65,21 +40,9 @@ const PostCard = ({
               state.user &&
               post.likes &&
               post.likes.includes(state.user._id) ? (
-                <HeartFilled
-                  className="text-danger h4 p-1"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    handleUnlike(post._id);
-                  }}
-                ></HeartFilled>
+                <HeartFilled className="text-danger h4 p-1"></HeartFilled>
               ) : (
-                <HeartOutlined
-                  className="text-danger h4 p-1"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => {
-                    handleLike(post._id);
-                  }}
-                ></HeartOutlined>
+                <HeartOutlined className="text-danger h4 p-1"></HeartOutlined>
               )}
 
               <span className="p-1">
@@ -89,38 +52,15 @@ const PostCard = ({
                     : `${post.likes.length} likes`
                   : ``}
               </span>
-              <CommentOutlined
-                className="text-danger h4 p-1 mx-1"
-                style={{ cursor: "pointer" }}
-                onClick={() => handleComment(post)}
-              ></CommentOutlined>
+              <CommentOutlined className="text-danger h4 p-1 mx-1"></CommentOutlined>
               <span className="p-1">
-                <Link href={`/user/comment/${post._id}`}>
-                  <a>
-                    {post && post.comments && post.comments.length
-                      ? post.comments == 1
-                        ? "1 comment"
-                        : `${post.comments.length} comments`
-                      : ""}
-                  </a>
-                </Link>
+                {post && post.comments && post.comments.length
+                  ? post.comments == 1
+                    ? "1 comment"
+                    : `${post.comments.length} comments`
+                  : ""}
               </span>
             </div>
-
-            {state && state.user && state.user._id === post.postedBy._id && (
-              <Dropdown
-                className="p-1"
-                overlay={<PostEditMenu post={post} deletePost={deletePost} />}
-                trigger={["click"]}
-              >
-                <a
-                  className="ant-dropdown-link"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  {!deleting ? <MenuOutlined /> : <LoadingOutlined />}
-                </a>
-              </Dropdown>
-            )}
           </div>
           {post.comments && post.comments.length > 0 && (
             <div
@@ -145,19 +85,6 @@ const PostCard = ({
                       title={
                         <div className="d-flex justify-content-between">
                           <span>{item.postedBy.username}</span>
-                          {state &&
-                            state.user &&
-                            state.user._id === item.postedBy._id && (
-                              <span>
-                                <DeleteOutlined
-                                  className="text-danger follow"
-                                  style={{
-                                    fontSize: "1rem",
-                                  }}
-                                  onClick={() => removeComment(post, item)}
-                                />
-                              </span>
-                            )}
                         </div>
                       }
                       description={
@@ -172,19 +99,15 @@ const PostCard = ({
                                 <HeartFilled
                                   className="text-danger"
                                   style={{
-                                    cursor: "pointer",
                                     fontSize: "1.25rem",
                                   }}
-                                  onClick={() => handleCommentUnlike(post, item)}
                                 ></HeartFilled>
                               ) : (
                                 <HeartOutlined
                                   className="text-danger"
                                   style={{
-                                    cursor: "pointer",
                                     fontSize: "1.25rem",
                                   }}
-                                  onClick={() => handleCommentLike(post, item)}
                                 ></HeartOutlined>
                               )}
                               <span className="mx-2 py-2 text-muted">
@@ -195,12 +118,7 @@ const PostCard = ({
                                   : ""}
                               </span>
 
-                              <span
-                                className="text-muted follow mx-2"
-                                onClick={() => handleReply(post, item)}
-                              >
-                                reply
-                              </span>
+                              <span className="text-muted mx-2">reply</span>
                             </div>
                             <span>{moment(item.createdAt).fromNow()}</span>
                           </div>
@@ -226,26 +144,6 @@ const PostCard = ({
                                             <span>
                                               {subitem.postedBy.username}
                                             </span>
-                                            {state &&
-                                              state.user &&
-                                              state.user._id ===
-                                                subitem.postedBy._id && (
-                                                <span>
-                                                  <DeleteOutlined
-                                                    className="text-danger follow"
-                                                    style={{
-                                                      fontSize: "1rem",
-                                                    }}
-                                                    onClick={() =>
-                                                      removeReply(
-                                                        post,
-                                                        item,
-                                                        subitem
-                                                      )
-                                                    }
-                                                  />
-                                                </span>
-                                              )}
                                           </div>
                                         }
                                         description={
@@ -264,31 +162,15 @@ const PostCard = ({
                                                   <HeartFilled
                                                     className="text-danger"
                                                     style={{
-                                                      cursor: "pointer",
                                                       fontSize: "1.25rem",
                                                     }}
-                                                    onClick={() =>
-                                                      handleReplyUnlike(
-                                                        post,
-                                                        item,
-                                                        subitem
-                                                      )
-                                                    }
                                                   ></HeartFilled>
                                                 ) : (
                                                   <HeartOutlined
                                                     className="text-danger"
                                                     style={{
-                                                      cursor: "pointer",
                                                       fontSize: "1.25rem",
                                                     }}
-                                                    onClick={() =>
-                                                      handleReplyLike(
-                                                        post,
-                                                        item,
-                                                        subitem
-                                                      )
-                                                    }
                                                   ></HeartOutlined>
                                                 )}
                                                 <span className="mx-2 py-2 text-muted">
@@ -299,12 +181,7 @@ const PostCard = ({
                                                     : ""}
                                                 </span>
 
-                                                <span
-                                                  className="text-muted follow mx-2"
-                                                  onClick={() =>
-                                                    handleReply(post, item)
-                                                  }
-                                                >
+                                                <span className="text-muted mx-2">
                                                   reply
                                                 </span>
                                               </div>
@@ -337,4 +214,4 @@ const PostCard = ({
   );
 };
 
-export default PostCard;
+export default HomePagePost;

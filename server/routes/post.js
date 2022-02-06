@@ -45,4 +45,8 @@ router.put("/unlike-reply", fs1[0], fs[17]);
 //pagination
 router.get("/total-posts", fs1[0], fs[18]);
 
+router.get("/display-posts", fs[19]);
+
+router.get("/single-public-post/:_id", fs[20]);
+
 module.exports = router;

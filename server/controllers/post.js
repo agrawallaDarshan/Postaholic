@@ -420,6 +420,36 @@ const getTotalPosts = async (req, res) => {
   }
 };
 
+const displayPosts = async (req, res) => {
+  try {
+    const posts = await Post.find()
+      .limit(12)
+      .sort({ createdAt: -1 })
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+
+    console.log(posts);
+
+    return res.json(posts);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const displaySinglePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params._id)
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+
+    return res.json(post);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = [
   postForm,
   uploadImage,
@@ -440,4 +470,6 @@ module.exports = [
   likeReply,
   unlikeReply,
   getTotalPosts,
+  displayPosts,
+  displaySinglePost,
 ];
