@@ -26,9 +26,11 @@ const postForm = async (req, res) => {
       image: image,
     });
     await post.save();
-    return res.json({
-      message: "Post shared successfully",
-    });
+    const postWithUser = await Post.findById(post._id)
+      .populate("postedBy", "_id name username image")
+      .populate("comments.postedBy", "_id name username image")
+      .populate("comments.reply.postedBy", "_id name username image");
+    return res.json(postWithUser);
   } catch (err) {
     res.json({
       error: "Something wrong happened",
@@ -428,8 +430,6 @@ const displayPosts = async (req, res) => {
       .populate("postedBy", "_id name username image")
       .populate("comments.postedBy", "_id name username image")
       .populate("comments.reply.postedBy", "_id name username image");
-
-    console.log(posts);
 
     return res.json(posts);
   } catch (err) {

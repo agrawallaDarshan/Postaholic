@@ -1,12 +1,37 @@
 import { UserContext } from "../context/index";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import HomePagePost from "../components/posts/HomePagePost";
 import Head from "next/head";
 import Link from "next/link";
+import io from "socket.io-client";
+
+const socket = io(
+  process.env.NEXT_PUBLIC_SOCKET_IO_URL,
+  { path: "/socket.io" },
+  {
+    reconnection: true,
+  }
+);
 
 const Home = ({ posts }) => {
   const [state, setState] = useContext(UserContext);
+  const [userPosts, setUserPosts] = useState([]);
+
+  // useEffect(() => {
+  //   // console.log("Socket", socket);
+  //   socket.on("broadcast-message", (message) => {
+  //     alert(message);
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    socket.on("new-user-post", (post) => {
+      setUserPosts([post, ...posts]);
+    });
+  });
+
+  const postCollections = userPosts.length > 0 ? userPosts : posts;
 
   return (
     <>
@@ -32,9 +57,16 @@ const Home = ({ posts }) => {
       </Head>
       <div className="container-fluid">
         <h1 className="text-center display-1 py-3">Home page</h1>
+        {/* <button
+          onClick={() => {
+            socket.emit("send-message", "Hello Darshan!!!");
+          }}
+        >
+          Click me
+        </button> */}
         <div className="row">
-          {posts.map((post) => (
-            <div className="col-md-4">
+          {postCollections.map((post) => (
+            <div className="col-md-4" key={post._id}>
               <Link href={`/home/${post._id}`}>
                 <a>
                   <HomePagePost key={post._id} post={post} />

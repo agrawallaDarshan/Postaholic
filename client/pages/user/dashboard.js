@@ -13,6 +13,16 @@ import Link from "next/link";
 import { Modal, Pagination } from "antd";
 import ReplyForm from "../../components/forms/ReplyForm";
 import SearchUser from "../../components/SearchUser";
+import io from "socket.io-client";
+
+//socket.io
+const socket = io(
+  process.env.NEXT_PUBLIC_SOCKET_IO_URL,
+  { path: "/socket.io" },
+  {
+    reconnection: true,
+  }
+);
 
 const Home = () => {
   const [state, setState] = useContext(UserContext);
@@ -98,7 +108,8 @@ const Home = () => {
       } else {
         setCurrentPage(1);
         fetchUserPosts();
-        toast.success(data.message);
+        toast.success("Post shared successfully");
+        socket.emit("send-user-post", data);
       }
 
       getTotalPosts();
@@ -381,11 +392,11 @@ const Home = () => {
         <PlusCircleFilled
           onClick={showDrawer}
           style={{
-            "position": "fixed",
-            "bottom": "2rem",
-            "right": "2rem",
-            "fontSize": "3rem",
-            "color": "#08c",
+            position: "fixed",
+            bottom: "2rem",
+            right: "2rem",
+            fontSize: "3rem",
+            color: "#08c",
             // zindex: "1"
           }}
         />

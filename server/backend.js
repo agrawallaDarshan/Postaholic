@@ -3,9 +3,19 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const app = express();
 const fs = require("fs");
 const router = require("./routes/auth");
+
+const app = express();
+const http = require("http").createServer(app);
+const io = require("socket.io")(http, {
+  path : "/socket.io",
+  cors: {
+    origin: process.env.CLIENT_ORIGIN,
+    methods: ["GET", "POST"],
+    allowHeaders: ["content-type"],
+  },
+});
 
 app.get("/", (req, res) => {
   res.send({ message: "hello world" });
@@ -23,7 +33,7 @@ app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [process.env.CLIENT_ORIGIN],
   })
 );
 
@@ -33,8 +43,23 @@ fs.readdirSync("./routes").forEach((routeFile) => {
   app.use("/api", require(`./routes/${routeFile}`));
 });
 
+// io.on("connect", (socket) => {
+//   // console.log("Socket ID", socket.id);
+//   socket.on("send-message", (message) => {
+//     // console.log("Message received =>", message);
+//     socket.broadcast.emit("broadcast-message", message);
+//   });
+// });
+
+io.on("connect", (socket) => {
+  socket.on("send-user-post", (post) => {
+    // console.log(post);
+    socket.broadcast.emit("new-user-post", post);
+  });
+});
+
 const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
+http.listen(port, () => {
   console.log("Backend server started successfully");
 });

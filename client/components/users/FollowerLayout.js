@@ -4,7 +4,7 @@ import moment from "moment";
 import { UserContext } from "../../context";
 import Link from "next/link";
 
-const FollowerLayout = ({ people, handleFollow, searchUsers = true }) => {
+const FollowerLayout = ({ people, handleFollow, searchUsers = false }) => {
   const [state] = useContext(UserContext);
   return (
     <List
@@ -32,7 +32,7 @@ const FollowerLayout = ({ people, handleFollow, searchUsers = true }) => {
                 ) ? (
                   <span>Following</span>
                 ) : (
-                  !searchUsers && (
+                  searchUsers === false && (
                     <span
                       className="text-primary follow"
                       onClick={() => {
