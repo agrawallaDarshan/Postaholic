@@ -123,7 +123,9 @@ const login = async (req, res) => {
       jwtToken,
     });
   } catch (err) {
-    return res.status(400).send("Login Failed!!");
+    return res.json({
+      error: "Something wrong happened!! Try Again..",
+    });
   }
 };
 
