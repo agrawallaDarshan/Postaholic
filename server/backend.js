@@ -9,9 +9,9 @@ const router = require("./routes/auth");
 const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
-  path : "/socket.io",
+  path: "/socket.io",
   cors: {
-    origin: process.env.CLIENT_ORIGIN,
+    origin: [process.env.CLIENT_ORIGIN, process.env.LOCALHOST_ORIGIN],
     methods: ["GET", "POST"],
     allowHeaders: ["content-type"],
   },
@@ -33,7 +33,7 @@ app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: [process.env.CLIENT_ORIGIN],
+    origin: [process.env.CLIENT_ORIGIN, process.env.LOCALHOST_ORIGIN],
   })
 );
 

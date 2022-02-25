@@ -11,7 +11,6 @@ const fs2 = require("../middlewares/post");
 router.post("/create-post", fs1[0], fs[0]);
 router.post(
   "/upload-image",
-  fs1[0],
   formidableMiddleware({
     maxFileSize: 5 * 1024 * 1024,
   }),
