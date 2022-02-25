@@ -10,7 +10,6 @@ import { RollbackOutlined } from "@ant-design/icons";
 const UserProfile = () => {
   const [state, setState] = useContext(UserContext);
   const [user, setUser] = useState({});
-  console.log(state);
 
   const router = useRouter();
   const username = router.query.username;
@@ -24,6 +23,7 @@ const UserProfile = () => {
   const fetchUserDetails = async () => {
     try {
       const { data } = await axios.get(`/get-user/${username}`);
+      console.log(data);
       setUser(data);
     } catch (err) {
       console.log(err);
@@ -62,7 +62,6 @@ const UserProfile = () => {
       //Updating context state
       setState({ ...state, user: data });
       toast.error(`You unfollowed ${username}`);
-      console.log(state);
       fetchUserDetails();
     } catch (err) {
       toast.error("Something wrong happened..Please try again");
@@ -81,7 +80,11 @@ const UserProfile = () => {
             cover={
               <img
                 alt={user && user.name}
-                src={user && user.image && user.image.url}
+                src={
+                  user && user.image
+                    ? user.image.url
+                    : `https://joeschmoe.io/api/v1/random`
+                }
                 style={{
                   width: "15rem",
                 }}

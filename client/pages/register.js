@@ -80,13 +80,13 @@ const Register = () => {
       });
 
       setUploading(false);
-
       if (data.message) {
         toast.success(data.message);
       } else {
         toast.error("Something wrong happened... please try again!!");
       }
     } catch (err) {
+      console.log(err);
       setUploading(false);
       toast.error("Something wrong happened");
     }

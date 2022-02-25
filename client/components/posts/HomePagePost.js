@@ -17,7 +17,15 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
           <div className="card-header d-flex justify-content-between">
             {/* Image//Name//Moment */}
             <div>
-              <Avatar size={35} src={post.postedBy.image.url}></Avatar>
+              <Avatar
+                size={35}
+                src={
+                  post &&
+                  post.postedBy &&
+                  post.postedBy.image &&
+                  post.postedBy.image.url
+                }
+              ></Avatar>
               <span className="m-2 p-1">
                 {post.postedBy.username
                   ? post.postedBy.username

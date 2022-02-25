@@ -32,7 +32,9 @@ const UserProvider = ({ children }) => {
       return response;
     },
     function (error) {
+      console.log(error);
       let res = error.response;
+      console.log(res);
       if (res.status === 401 && res.config && !res.config.__isRetryRequest) {
         setState(null);
         window.localStorage.removeItem("user_details");

@@ -42,7 +42,7 @@ const PublicPage = ({ post }) => {
 //When we are using server side rendering, inside of router we are gonna use the context as a parameter and access the id as ctx.params._id
 export async function getServerSideProps(ctx) {
   const { data } = await axios.get(
-    `http://localhost:8000/api/single-public-post/${ctx.params._id}`
+    `${process.env.NEXT_PUBLIC_API}/single-public-post/${ctx.params._id}`
   );
   return {
     props: {

@@ -73,10 +73,9 @@ const Nav = () => {
             >
               <Avatar
                 src={
-                  state &&
-                  state.user &&
-                  state.user.image &&
-                  `${state.user.image.url}`
+                  state && state.user && state.user.image
+                    ? `${state.user.image.url}`
+                    : `https://joeschmoe.io/api/v1/random`
                 }
               ></Avatar>
             </button>

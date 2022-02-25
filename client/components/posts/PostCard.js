@@ -30,7 +30,7 @@ const PostCard = ({
   replyNumbers = 12,
   removeReply,
   handleReplyLike,
-  handleReplyUnlike
+  handleReplyUnlike,
 }) => {
   const [state] = useContext(UserContext);
   const ColorList = ["#f56a00", "#7265e6", "#ffbf00", "#00a2ae"];
@@ -42,7 +42,14 @@ const PostCard = ({
           <div className="card-header d-flex justify-content-between">
             {/* Image//Name//Moment */}
             <div>
-              <Avatar size={35} src={post.postedBy.image.url}></Avatar>
+              <Avatar
+                size={35}
+                src={
+                  post && post.postedBy && post.postedBy.image
+                    ? post.postedBy.image.url
+                    : `https://joeschmoe.io/api/v1/random`
+                }
+              ></Avatar>
               <span className="m-2 p-1">
                 {post.postedBy.username
                   ? post.postedBy.username
@@ -175,7 +182,9 @@ const PostCard = ({
                                     cursor: "pointer",
                                     fontSize: "1.25rem",
                                   }}
-                                  onClick={() => handleCommentUnlike(post, item)}
+                                  onClick={() =>
+                                    handleCommentUnlike(post, item)
+                                  }
                                 ></HeartFilled>
                               ) : (
                                 <HeartOutlined
