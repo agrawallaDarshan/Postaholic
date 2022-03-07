@@ -38,8 +38,10 @@ const PostCard = ({
   return (
     <>
       {post && post.postedBy && (
-        <div key={post._id} className="card mb-5">
-          <div className="card-header d-flex justify-content-between">
+        <div key={post._id} className="card mb-5" style={{
+          "border" : "none"
+        }}>
+          <div className="card-header d-flex justify-content-between bg">
             {/* Image//Name//Moment */}
             <div>
               <Avatar
@@ -62,11 +64,11 @@ const PostCard = ({
                 : moment(post.createdAt).fromNow()}
             </div>
           </div>
-          <div className="card-body">
+          <div className="card-body bg">
             {post.image && <PostImage url={post.image.url} />}
             {renderHTML(post.postContent)}
           </div>
-          <div className="card-footer d-flex justify-content-between">
+          <div className="card-footer d-flex justify-content-between bg">
             <div>
               {state &&
               state.user &&
@@ -131,9 +133,8 @@ const PostCard = ({
           </div>
           {post.comments && post.comments.length > 0 && (
             <div
-              className="card-footer"
+              className="card-footer bg"
               style={{
-                backgroundColor: "white",
                 maxHeight: "10rem",
                 overflow: "scroll",
               }}
@@ -150,7 +151,7 @@ const PostCard = ({
                         />
                       }
                       title={
-                        <div className="d-flex justify-content-between">
+                        <div className="d-flex justify-content-between bg">
                           <span>{item.postedBy.username}</span>
                           {state &&
                             state.user &&
@@ -169,8 +170,8 @@ const PostCard = ({
                       }
                       description={
                         <>
-                          <div className="my-1">{item.content}</div>
-                          <div className="d-flex justify-content-between">
+                          <div className="my-1 bg">{item.content}</div>
+                          <div className="d-flex justify-content-between bg">
                             <div>
                               {state &&
                               state.user &&
@@ -214,7 +215,7 @@ const PostCard = ({
                             <span>{moment(item.createdAt).fromNow()}</span>
                           </div>
                           {item.reply && item.reply.length > 0 && (
-                            <div className="row">
+                            <div className="row bg">
                               <div className="col offset-sm-1">
                                 <List
                                   itemLayout="horizontal"
@@ -231,7 +232,7 @@ const PostCard = ({
                                           />
                                         }
                                         title={
-                                          <div className="d-flex justify-content-between">
+                                          <div className="d-flex justify-content-between bg">
                                             <span>
                                               {subitem.postedBy.username}
                                             </span>
@@ -259,10 +260,10 @@ const PostCard = ({
                                         }
                                         description={
                                           <>
-                                            <div className="my-1">
+                                            <div className="my-1 bg">
                                               {subitem.content}
                                             </div>
-                                            <div className="d-flex justify-content-between">
+                                            <div className="d-flex justify-content-between bg">
                                               <div>
                                                 {state &&
                                                 state.user &&

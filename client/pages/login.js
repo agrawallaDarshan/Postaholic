@@ -13,6 +13,9 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [state, setState] = useContext(UserContext);
   const router = useRouter();
+  const color = getComputedStyle(document.documentElement).getPropertyValue(
+    "--dark-background-color"
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +38,7 @@ const Login = () => {
         });
 
         window.localStorage.setItem("user_details", JSON.stringify(data));
+        window.localStorage.setItem("background_color", JSON.stringify(color));
         setLoading(false);
       }
     } catch (err) {

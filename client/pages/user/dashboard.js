@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Modal, Pagination } from "antd";
 import ReplyForm from "../../components/forms/ReplyForm";
 import SearchUser from "../../components/SearchUser";
+import Footer from "../../components/footer/Footer";
 import io from "socket.io-client";
 
 //socket.io
@@ -383,23 +384,12 @@ const Home = () => {
 
   return (
     <UserValidation>
-      <div className="container-fluid">
-        <div className="row">
+      <div className="container-fluid bg">
+        {/* <div className="row">
           <div className="col">
             <h1 className="display-1 text-center">Dashboard Page</h1>
           </div>
-        </div>
-        <PlusCircleFilled
-          onClick={showDrawer}
-          style={{
-            position: "fixed",
-            bottom: "2rem",
-            right: "2rem",
-            fontSize: "3rem",
-            color: "#08c",
-            // zindex: "1"
-          }}
-        />
+        </div> */}
         <div className="row p-3">
           <div className="col-md-8">
             <UserPost
@@ -418,7 +408,7 @@ const Home = () => {
               handleReplyUnlike={handleReplyUnlike}
             />
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 bg">
             {/* <pre>{JSON.stringify(people, null, 4)}</pre> */}
             <SearchUser
               search={search}
@@ -428,13 +418,13 @@ const Home = () => {
             {search.length > 0 && searchedData.length > 0 && (
               <FollowerLayout people={searchedData} />
             )}
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between bg">
               {state && state.user && state.user.following && (
                 <Link href="/user/following">
                   <a
                     className="h5"
                     style={{
-                      color: "#9c27b0",
+                      color: "white",
                     }}
                   >
                     {state.user.following.length} Following
@@ -446,7 +436,7 @@ const Home = () => {
                   <a
                     className="h5"
                     style={{
-                      color: "#9c27b0",
+                      color: "white",
                     }}
                   >
                     {state.user.followers.length} Followers
@@ -490,15 +480,16 @@ const Home = () => {
           </Drawer>
         </>
       </div>
-      <div className="d-flex justify-content-center">
+      <div className="d-flex justify-content-center bg">
         <Pagination
           current={currentPage}
           total={totalPosts}
           pageSize={perPageItems}
           onChange={(value) => setCurrentPage(value)}
-          className="m-1 p-1"
+          className="m-1 p-1 mb-5"
         />
       </div>
+      <Footer showDrawer={showDrawer} />
       <div>
         <Modal
           visible={commentVisible}

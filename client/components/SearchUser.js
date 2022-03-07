@@ -11,7 +11,7 @@ const SearchUser = ({ search, setSearch, handleSearch }) => {
         <div className="col-10">
           <input
             type="search"
-            className="form-control"
+            className="form-control bg"
             placeholder="Search"
             value={search}
             onChange={(e) => {

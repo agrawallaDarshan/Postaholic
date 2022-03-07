@@ -13,6 +13,7 @@ const FollowerLayout = ({ people, handleFollow, searchUsers = false }) => {
       renderItem={(user) => (
         <List.Item>
           <List.Item.Meta
+            style={{ border: "none" }}
             avatar={
               <Avatar
                 src={
@@ -22,8 +23,9 @@ const FollowerLayout = ({ people, handleFollow, searchUsers = false }) => {
                 }
               />
             }
+            bordered={false}
             title={
-              <div className="d-flex justify-content-between">
+              <div className="d-flex justify-content-between bg">
                 <Link href={`/user/profile/${user.username}`}>
                   <a>{user.username ? user.username : user.name}</a>
                 </Link>
@@ -46,11 +48,13 @@ const FollowerLayout = ({ people, handleFollow, searchUsers = false }) => {
               </div>
             }
             description={
-              user.about
-                ? user.about.length < 20
-                  ? user.about
-                  : user.about.substring(0, 20) + "......"
-                : "Joined " + moment(user.createdAt).fromNow()
+              <span className="bg">
+                {user.about
+                  ? user.about.length < 20
+                    ? user.about
+                    : user.about.substring(0, 20) + "......"
+                  : "Joined " + moment(user.createdAt).fromNow()}
+              </span>
             }
           />
         </List.Item>
