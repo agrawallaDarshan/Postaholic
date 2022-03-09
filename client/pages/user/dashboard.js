@@ -6,7 +6,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Drawer } from "antd";
 import UserPost from "../../components/posts/UserPost";
-import { PlusCircleFilled } from "@ant-design/icons";
 import FollowerLayout from "../../components/users/FollowerLayout";
 import CommentForm from "../../components/forms/CommentForm";
 import Link from "next/link";
@@ -67,6 +66,32 @@ const Home = () => {
     if (state && state.jwtToken) {
       fetchUserPosts();
       findPeopleToFollow();
+      const color = window.localStorage.getItem("background_color")
+        ? window.localStorage.getItem("background_color")
+        : "white";
+      if (color === "white") {
+        window &&
+          window.document.documentElement.style.setProperty(
+            "--dark-background-color",
+            color
+          );
+        window &&
+          window.document.documentElement.style.setProperty(
+            "--light-text-color",
+            "black"
+          );
+      } else {
+        window &&
+          window.document.documentElement.style.setProperty(
+            "--dark-background-color",
+            color
+          );
+        window &&
+          window.document.documentElement.style.setProperty(
+            "--light-text-color",
+            "white"
+          );
+      }
     }
   }, [state && state.jwtToken, currentPage]);
 

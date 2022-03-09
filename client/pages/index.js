@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Tooltip } from "antd";
 import axios from "axios";
 import HomePagePost from "../components/posts/HomePagePost";
 import Head from "next/head";
 import Link from "next/link";
 import { LoadingOutlined } from "@ant-design/icons";
 import io from "socket.io-client";
+import { UserContext } from "../context";
 
 const socket = io(
   process.env.NEXT_PUBLIC_SOCKET_IO_URL,
@@ -16,8 +18,11 @@ const socket = io(
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
+  const [state, setState] = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
+  const [bgColor, setBgColor] = useState();
+  const [alertVisible, setAlertVisible] = useState(loading);
 
   useEffect(() => {
     socket.on("new-user-post", (post) => {
@@ -27,6 +32,34 @@ const Home = () => {
 
   useEffect(() => {
     getDisplayPosts();
+    const color = window.localStorage.getItem("background_color")
+      ? window.localStorage.getItem("background_color")
+      : "white";
+    if (color === "white") {
+      setBgColor("white");
+      window &&
+        window.document.documentElement.style.setProperty(
+          "--dark-background-color",
+          color
+        );
+      window &&
+        window.document.documentElement.style.setProperty(
+          "--light-text-color",
+          "black"
+        );
+    } else {
+      setBgColor("black");
+      window &&
+        window.document.documentElement.style.setProperty(
+          "--dark-background-color",
+          color
+        );
+      window &&
+        window.document.documentElement.style.setProperty(
+          "--light-text-color",
+          "white"
+        );
+    }
   });
 
   const postCollections = userPosts.length > 0 ? userPosts : posts;
@@ -71,7 +104,7 @@ const Home = () => {
 
       <div className="container-fluid">
         <h1 className="text-center display-1 py-3">Home page</h1>
-        <div className="row">
+        <div className="row bg">
           {loading ? (
             <LoadingOutlined className="display-1" />
           ) : (

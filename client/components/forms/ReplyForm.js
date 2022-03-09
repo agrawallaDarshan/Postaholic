@@ -1,10 +1,10 @@
 const ReplyForm = ({ reply, setReply, addReply }) => {
   return (
     <>
-      <form>
+      <form className="bg">
         <input
           type="text"
-          className="form-control"
+          className="form-control bg"
           placeholder="Drop your reply"
           value={reply}
           onChange={(e) => setReply(e.target.value)}

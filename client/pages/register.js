@@ -98,9 +98,14 @@ const Register = () => {
 
   return (
     <div className="container-fluid">
-      <div className="row bg-dark text-light py-3">
+      <div
+        className="row py-3"
+        style={{
+          backgroundColor: "#f0f0f2",
+        }}
+      >
         <div className="col text-center">
-          <h1 style={{ color: "white" }}>Register</h1>
+          <h1>Register</h1>
         </div>
       </div>
 

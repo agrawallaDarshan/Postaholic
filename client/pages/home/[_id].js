@@ -51,9 +51,9 @@ const PublicPage = () => {
         <meta property="og:image:secure_url" content={imageSource()} />
       </Head>
 
-      <div className="container-fluid p-3">
-        <div className="row">
-          <div className="offset-md-2 col-md-8">
+      <div className="container-fluid p-3 bg">
+        <div className="row bg">
+          <div className="offset-md-2 col-md-8 bg">
             <HomePagePost key={post_id} post={post} />
           </div>
         </div>

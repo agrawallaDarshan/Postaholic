@@ -89,9 +89,20 @@ const profileUpdate = () => {
 
   return (
     <div className="container-fluid">
-      <div className="row bg-dark text-light py-3">
-        <div className="col text-center">
-          <h1 style={{ color: "white" }}>Profile Update</h1>
+      <div
+        className="row py-3"
+        style={{
+          backgroundColor: "#f0f0f2",
+        }}
+      >
+        <div
+          className="col text-center"
+          style={{
+            backgroundColor: "505050",
+            color: "white",
+          }}
+        >
+          <h1>Profile Update</h1>
         </div>
       </div>
 

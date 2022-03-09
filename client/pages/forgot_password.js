@@ -48,8 +48,13 @@ const forgotPassword = () => {
   return (
     <div className="container-fluid">
       <div className="col text-center">
-        <div className="row bg-dark text-light py-3">
-          <h1 style={{ color: "white" }}>Reset Password</h1>
+        <div
+          className="row py-3"
+          style={{
+            backgroundColor: "#f0f0f2",
+          }}
+        >
+          <h1>Reset Password</h1>
         </div>
       </div>
 

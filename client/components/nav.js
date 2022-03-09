@@ -4,10 +4,10 @@ import { UserContext } from "../context/index";
 import { useRouter } from "next/router";
 import { Avatar } from "antd";
 
-
 const Nav = () => {
   const [state, setState] = useContext(UserContext);
   const [currentLink, setCurrentLink] = useState("");
+  const [color, setColor] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -20,18 +20,59 @@ const Nav = () => {
     router.push("/login");
   };
 
+  useEffect(() => {
+    const color = JSON.parse(window.localStorage.getItem("background_color"))
+      ? JSON.parse(window.localStorage.getItem("background_color"))
+      : "white";
+
+    if (state && state.user) {
+      if (color === "white") {
+        window &&
+          window.document.documentElement.style.setProperty(
+            "--nav-bar-color",
+            "#f0f0f2"
+          );
+        window &&
+          window.document.documentElement.style.setProperty(
+            "--nav-text-color",
+            "black"
+          );
+      } else {
+        window &&
+          window.document.documentElement.style.setProperty(
+            "--nav-bar-color",
+            "#121212"
+          );
+        window &&
+          window.document.documentElement.style.setProperty(
+            "--nav-text-color",
+            "white"
+          );
+      }
+    } else {
+      window.document.documentElement.style.setProperty(
+        "--nav-bar-color",
+        "#f0f0f2"
+      );
+      window &&
+        window.document.documentElement.style.setProperty(
+          "--nav-text-color",
+          "black"
+        );
+    }
+  });
+
   return (
     <>
-      <nav className="nav justify-content-between" style={{
-        "backgroundColor" : "#121212"
-      }}>
+      <nav className="nav justify-content-between">
         <Link href="/">
           <a
-            className={`nav-link text-light my-1 ${
-              currentLink === "/" && "active"
+            className={`nav-link my-1 nav_a ${
+              currentLink === "/" && "active_a"
             }`}
             style={{
               fontSize: "1rem",
+              margin: "0",
             }}
           >
             Home
@@ -42,8 +83,8 @@ const Nav = () => {
           <>
             <Link href="/login">
               <a
-                className={`nav-link text-light my-1 ${
-                  currentLink === "/login" && "active"
+                className={`nav-link my-1 nav_a ${
+                  currentLink === "/login" && "active_a"
                 }`}
                 style={{
                   fontSize: "1rem",
@@ -55,8 +96,8 @@ const Nav = () => {
 
             <Link href="/register">
               <a
-                className={`nav-link text-light my-1 ${
-                  currentLink === "/register" && "active"
+                className={`nav-link nav_a my-1 ${
+                  currentLink === "/register" && "active_a"
                 }`}
                 style={{
                   fontSize: "1rem",
@@ -67,10 +108,29 @@ const Nav = () => {
             </Link>
           </>
         ) : (
-          <div>
+          <div className="d-flex justify-space-between">
+            <div
+              className="my-2 mx-1 p-1"
+              style={{
+                fontSize: "1rem",
+              }}
+            >
+              <Link href="/user/dashboard" className="nav_a">
+                <a
+                  className={`my-1 ${
+                    currentLink === "/user/dashboard" && "active_a"
+                  }`}
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                >
+                  {state && state.user && state.user.username}
+                </a>
+              </Link>
+            </div>
             <div className="btn btn-sm dropdown">
               <button
-                className="btn btn-sm dropdown-toggle text-light"
+                className="btn btn-sm dropdown-toggle"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -84,13 +144,13 @@ const Nav = () => {
                 ></Avatar>
               </button>
               <ul
-                className="dropdown-menu"
+                className="dropdown-menu bg"
                 aria-labelledby="dropdownMenuButton1"
               >
                 <li>
                   <Link href="/user/dashboard">
                     <a
-                      className={`nav-link text-dark ${
+                      className={`nav-link ${
                         currentLink === "/user/dashboard" &&
                         "text-white bg-primary"
                       }`}
@@ -102,9 +162,9 @@ const Nav = () => {
                 <li>
                   <Link href="/user/profile/profile_update">
                     <a
-                      className={`nav-link text-dark ${
+                      className={`nav-link ${
                         currentLink === "/user/profile/profile_update" &&
-                        "text-white bg-primary"
+                        "bg-primary text-light"
                       }`}
                     >
                       Profile
@@ -112,7 +172,7 @@ const Nav = () => {
                   </Link>
                 </li>
                 <li>
-                  <a onClick={logout} className="nav-link text-dark">
+                  <a onClick={logout} className="nav-link">
                     Logout
                   </a>
                 </li>

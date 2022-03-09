@@ -1,6 +1,8 @@
 :root {
   --dark-background-color: white;
   --light-text-color: black;
+  --nav-bar-color: #f0f0f2;
+  --nav-text-color: black;
 }
 /* 
 body {
@@ -52,4 +54,45 @@ body {
 
 .ant-list-item {
   border: none !important;
+}
+
+.ant-modal-header,
+.ant-drawer-header {
+  background-color: var(--dark-background-color) !important;
+  color: var(--light-text-color) !important;
+  border: none !important;
+}
+
+.ant-modal-body,
+.ant-drawer-body {
+  background-color: var(--dark-background-color) !important;
+  color: var(--light-text-color) !important;
+  border: none !important;
+}
+
+.ant-modal-title,
+.ant-drawer-title {
+  color: var(--light-text-color) !important;
+}
+
+.ant-modal-close-x,
+.ant-drawer-close {
+  color: var(--light-text-color) !important;
+}
+
+.nav {
+  background-color: var(--nav-bar-color) !important;
+  color: var(--nav-text-color) !important;
+}
+
+.nav_a {
+  color: var(--nav-text-color) !important;
+}
+
+.active_a {
+  font-weight: bold;
+}
+
+.dropdown-toggle {
+  color: var(--light-text-color) !important;
 }

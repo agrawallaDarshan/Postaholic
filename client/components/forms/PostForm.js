@@ -24,8 +24,8 @@ const PostForm = ({
   uploading,
 }) => {
   return (
-    <div className="card">
-      <div className="card-body">
+    <div className="card bg">
+      <div className="card-body bg">
         <form className="form-group">
           <ReactQuill
             theme="snow"
@@ -33,13 +33,13 @@ const PostForm = ({
             onChange={(e) => {
               setPostContent(e);
             }}
-            className="form-control"
+            className="form-control bg"
             placeholder="write something..."
           />
         </form>
       </div>
 
-      <div className="card-footer d-flex justify-content-between">
+      <div className="card-footer d-flex justify-content-between bg">
         <button
           disabled={!postContent}
           onClick={postSubmit}
@@ -51,7 +51,7 @@ const PostForm = ({
           <button
             className="btn btn-primary btn-sm my-1 mx-2"
             onClick={() => {
-              console.log("Hello");
+              // console.log("Hello");
             }}
             hidden={image && image.url === undefined}
           >

@@ -13,7 +13,6 @@ const FollowerLayout = ({ people, handleFollow, searchUsers = false }) => {
       renderItem={(user) => (
         <List.Item>
           <List.Item.Meta
-            style={{ border: "none" }}
             avatar={
               <Avatar
                 src={
@@ -23,7 +22,6 @@ const FollowerLayout = ({ people, handleFollow, searchUsers = false }) => {
                 }
               />
             }
-            bordered={false}
             title={
               <div className="d-flex justify-content-between bg">
                 <Link href={`/user/profile/${user.username}`}>

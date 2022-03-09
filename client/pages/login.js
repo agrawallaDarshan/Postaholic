@@ -13,9 +13,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [state, setState] = useContext(UserContext);
   const router = useRouter();
-  const color = getComputedStyle(document.documentElement).getPropertyValue(
-    "--dark-background-color"
-  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +35,10 @@ const Login = () => {
         });
 
         window.localStorage.setItem("user_details", JSON.stringify(data));
-        window.localStorage.setItem("background_color", JSON.stringify(color));
+        window.localStorage.setItem(
+          "background_color",
+          JSON.stringify("white")
+        );
         setLoading(false);
       }
     } catch (err) {
@@ -54,9 +54,14 @@ const Login = () => {
 
   return (
     <div className="container-fluid">
-      <div className="row bg-dark text-light py-3">
+      <div
+        className="row py-3"
+        style={{
+          "backgroundColor" : "#f0f0f2"
+        }}
+      >
         <div className="col text-center">
-          <h1 style={{ color: "white" }}>Login</h1>
+          <h1>Login</h1>
         </div>
       </div>
 

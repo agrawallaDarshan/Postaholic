@@ -74,7 +74,6 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
             <div
               className="card-footer"
               style={{
-                backgroundColor: "white",
                 maxHeight: "10rem",
                 overflow: "scroll",
               }}
