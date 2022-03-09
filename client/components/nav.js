@@ -75,7 +75,7 @@ const Nav = () => {
               margin: "0",
             }}
           >
-            Home
+            Postaholic
           </a>
         </Link>
 

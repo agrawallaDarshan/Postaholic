@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { Tooltip } from "antd";
 import axios from "axios";
 import HomePagePost from "../components/posts/HomePagePost";
 import Head from "next/head";
@@ -18,11 +17,9 @@ const socket = io(
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
-  const [state, setState] = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
   const [bgColor, setBgColor] = useState();
-  const [alertVisible, setAlertVisible] = useState(loading);
 
   useEffect(() => {
     socket.on("new-user-post", (post) => {
@@ -80,18 +77,18 @@ const Home = () => {
     <>
       <Head>
         <title>
-          MERNCAMP_FINAL_PROJECT - A social network by devs for devs
+          POSTAHOLIC - A Social Media Website by @agrawallaDarshan
         </title>
         <meta
           name="description"
-          content="A social network app developed by @agrawallaDarshan as a project"
+          content="A Social Media Website developed by @agrawallaDarshan"
         />
         <meta
           property="og:description"
-          content="A social network app developed by @agrawallaDarshan in his learning journey"
+          content="A Social Media Website developed by @agrawallaDarshan in his learning journey"
         />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="MERNCAMP_FINAL_PROJECT" />
+        <meta property="og:site_name" content="POSTAHOLIC" />
         <meta
           property="og:url"
           content="https://mernstack-frontend-24efe.web.app"
@@ -104,7 +101,7 @@ const Home = () => {
 
       <div className="container-fluid">
         <h1 className="text-center display-1 py-3">Home page</h1>
-        <div className="row bg">
+        <div className="row">
           {loading ? (
             <LoadingOutlined className="display-1" />
           ) : (
