@@ -13,8 +13,19 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
   return (
     <>
       {post && post.postedBy && (
-        <div key={post._id} className="card mb-5">
-          <div className="card-header d-flex justify-content-between">
+        <div
+          key={post._id}
+          className="card mb-5"
+          style={{
+            color: "black",
+          }}
+        >
+          <div
+            className="card-header d-flex justify-content-between"
+            style={{
+              color: "black",
+            }}
+          >
             {/* Image//Name//Moment */}
             <div>
               <Avatar
@@ -32,17 +43,32 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
                   : post.postedBy.name}
               </span>
             </div>
-            <div className="m-1">
+            <div
+              className="m-1"
+              style={{
+                color: "black",
+              }}
+            >
               {post.isEdited
                 ? "Updated " + moment(post.updatedAt).fromNow()
                 : moment(post.createdAt).fromNow()}
             </div>
           </div>
-          <div className="card-body">
+          <div
+            className="card-body"
+            style={{
+              color: "black",
+            }}
+          >
             {post.image && <PostImage url={post.image.url} />}
             {renderHTML(post.postContent)}
           </div>
-          <div className="card-footer d-flex justify-content-between">
+          <div
+            className="card-footer d-flex justify-content-between"
+            style={{
+              color: "black",
+            }}
+          >
             <div>
               {state &&
               state.user &&
@@ -76,6 +102,7 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
               style={{
                 maxHeight: "10rem",
                 overflow: "scroll",
+                color: "black",
               }}
             >
               <List
@@ -96,8 +123,20 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
                       }
                       description={
                         <>
-                          <div className="my-1">{item.content}</div>
-                          <div className="d-flex justify-content-between">
+                          <div
+                            className="my-1"
+                            style={{
+                              color: "black",
+                            }}
+                          >
+                            {item.content}
+                          </div>
+                          <div
+                            className="d-flex justify-content-between"
+                            style={{
+                              color: "black",
+                            }}
+                          >
                             <div>
                               {state &&
                               state.user &&
@@ -131,7 +170,12 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
                           </div>
                           {item.reply && item.reply.length > 0 && (
                             <div className="row">
-                              <div className="col offset-sm-1">
+                              <div
+                                className="col offset-sm-1"
+                                style={{
+                                  color: "black",
+                                }}
+                              >
                                 <List
                                   itemLayout="horizontal"
                                   dataSource={item.reply.slice(0, replyNumbers)}
@@ -147,7 +191,12 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
                                           />
                                         }
                                         title={
-                                          <div className="d-flex justify-content-between">
+                                          <div
+                                            className="d-flex justify-content-between"
+                                            style={{
+                                              color: "black",
+                                            }}
+                                          >
                                             <span>
                                               {subitem.postedBy.username}
                                             </span>
@@ -155,10 +204,20 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
                                         }
                                         description={
                                           <>
-                                            <div className="my-1">
+                                            <div
+                                              className="my-1"
+                                              style={{
+                                                color: "black",
+                                              }}
+                                            >
                                               {subitem.content}
                                             </div>
-                                            <div className="d-flex justify-content-between">
+                                            <div
+                                              className="d-flex justify-content-between"
+                                              style={{
+                                                color: "black",
+                                              }}
+                                            >
                                               <div>
                                                 {state &&
                                                 state.user &&

@@ -100,7 +100,7 @@ const Home = () => {
       </Head>
 
       <div className="container-fluid">
-        <h1 className="text-center display-1 py-3">Home page</h1>
+        <h1 className="text-center display-1 py-3">Home</h1>
         <div className="row">
           {loading ? (
             <LoadingOutlined className="display-1" />
