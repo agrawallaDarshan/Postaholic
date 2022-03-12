@@ -109,8 +109,10 @@ react-toastify: ^8.1.0 |
 User visit public / Home page
 ![User visit public / Home page](img/Postaholic_Home.png)
 
+
 User can sign in or sign up
 ![Dashboard with dark mode](img/Postaholic_Dashboard.png)
+
 
 Protected login page with Password Reset Feature
 ![After signing in user can go to account route](img/Login.png)
