@@ -111,7 +111,7 @@ User visit public / Home page
 
 
 User can sign in or sign up
-![Dashboard with dark mode](img/Postaholic_Dashboard.png)
+![Dashboard with dark mode](img/InShot_20220315_015526391.jpg)
 
 
 Highly Responsive Designs
