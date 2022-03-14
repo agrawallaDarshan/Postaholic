@@ -111,11 +111,11 @@ User visit public / Home page
 
 
 User can sign in or sign up
-![Dashboard with dark mode](img/InShot_20220315_015526391.jpg)
+![Dashboard with dark mode](img/Postaholic_Dashboard.png)
 
 
 Highly Responsive Designs
-![After signing in user can go to account route](img/InShot_20220315_013852609.jpg)
+![After signing in user can go to account route](img/InShot_20220315_015526391.jpg)
 
 ## Hosted Link
 
