@@ -5,6 +5,7 @@ import renderHTML from "react-render-html";
 import { UserContext } from "../../context";
 import { useContext } from "react";
 import { HeartOutlined, HeartFilled, CommentOutlined } from "@ant-design/icons";
+import BlurPostImage from "../../components/posts/BlurPostImage";
 
 const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
   const [state] = useContext(UserContext);
@@ -60,7 +61,9 @@ const HomePagePost = ({ post, commentNumbers = 10, replyNumbers = 12 }) => {
               color: "black",
             }}
           >
-            {post.image && <PostImage url={post.image.url} />}
+            {state && state.user
+              ? post.image && <PostImage url={post.image.url} />
+              : post.image && <BlurPostImage url={post.image.url} />}
             {renderHTML(post.postContent)}
           </div>
           <div
