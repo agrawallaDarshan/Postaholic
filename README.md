@@ -114,8 +114,8 @@ User can sign in or sign up
 ![Dashboard with dark mode](img/Postaholic_Dashboard.png)
 
 
-Protected login page with Password Reset Feature
-![After signing in user can go to account route](img/Login.png)
+Highly Responsive Designs
+![After signing in user can go to account route](img/InShot_20220315_013852609.jpg)
 
 ## Hosted Link
 
